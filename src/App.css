@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+.vcc-sticky-nav-bar {
+  background-color: lavender;
+  padding: 10px;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  vertical-align: center;
+}

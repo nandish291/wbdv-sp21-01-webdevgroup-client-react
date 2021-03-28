@@ -1,8 +1,8 @@
 import React from 'react'
-import {Link} from "react-router-dom"
-
-
 import {makeStyles} from '@material-ui/core/styles';
+import img from "./1_wjfSFGr3OzwP4I6nQ12EvQ.png"
+
+// card imports
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,7 +13,10 @@ import Typography from '@material-ui/core/Typography';
 
 const EventCard = (
     {
-        events,
+        event,
+        title,
+        venue,
+        location
 
     }
 ) => {
@@ -25,37 +28,40 @@ const EventCard = (
         media: {
             height: 140,
         },
+
     });
 
     const classes = useStyles();
+
     return (
 
-        <Card className={classes.root}>
-            <CardActionArea>
-                <CardMedia
-                    className={classes.media}
-                    image="/static/images/cards/contemplative-reptile.jpg"
-                    title="Contemplative Reptile"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        Lizard
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                        across all continents except Antarctica
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
-                    Share
-                </Button>
-                <Button size="small" color="primary">
-                    Learn More
-                </Button>
-            </CardActions>
-        </Card>
+            <Card className={classes.root}>
+                <CardActionArea>
+                    <CardMedia
+                        className={classes.media}
+                        image={img}
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {title}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {venue}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {location}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <Button size="small" color="primary">
+                        View Event
+                    </Button>
+                    <Button size="small" color="primary">
+                        I'm going
+                    </Button>
+                </CardActions>
+            </Card>
     );
 }
 

@@ -24,8 +24,25 @@ class EventManager
             <div>
 
 
-                <div>
-                    <h1>Nav Bar</h1>
+                {/*<div>*/}
+                {/*    <h1>Nav Bar</h1>*/}
+                {/*</div>*/}
+
+                <div className="vcc-sticky-nav-bar">
+                    <div className="row">
+                        <div className="col-1">
+                            <i className="fas fa-2x fa-search"/>
+                        </div>
+                        <div className="col-2 d-none d-sm-table-cell">
+                            Dashboard
+                        </div>
+                        <div className="col-8">
+                            <input className="form-control" placeholder="Event or Artist Lookup"/>
+                        </div>
+                        <div className="col-1">
+                            <i className="fa fa-plus-circle"/>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
