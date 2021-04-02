@@ -1,6 +1,6 @@
 import './App.css';
 import {BrowserRouter, Route} from "react-router-dom";
-import EventManager from "./components/event-manager";
+import Search from "./components/search"
 
 function App() {
     return (
@@ -8,7 +8,7 @@ function App() {
             <div className="container-fluid">
                 <Route path="/"
                        exact={true}>
-                    <EventManager/>
+                    <Search/>
                 </Route>
             </div>
         </BrowserRouter>

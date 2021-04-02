@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 const EventCard = (
     {
-        event,
+        id,
         title,
         venue,
         location
@@ -43,13 +43,8 @@ const EventCard = (
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
-                            {title}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {venue}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {location}
+                            {id}
+                            {/*{title}*/}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

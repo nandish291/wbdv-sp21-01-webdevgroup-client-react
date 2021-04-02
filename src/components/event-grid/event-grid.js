@@ -46,33 +46,32 @@ const EventGrid = (
             <div>
                 <h2>Upcoming Events</h2>
             </div>
-            <div className={classes.root}>
-                <GridList cellHeight={300} className={classes.gridList} cols={2.5}>
-                    {events.map((event) => (
-                        <GridListTile>
-                            <EventCard key={event.id}
-                                       title={event.title}
-                                       event={event}
-                                       venue={event.venue}
-                                       location={event.location}/>
-                            <GridListTileBar
-                                // title={event.title}
-                                classes={{
-                                    root: classes.titleBar,
-                                    title: classes.title,
-                                }}
-                                actionIcon={
-                                    <IconButton aria-label={`star ${event.title}`}>
-                                        <StarBorderIcon className={classes.title}/>
-                                    </IconButton>
-                                }
-                            />
-                        </GridListTile>
-                    ))}
+            {/*<div className={classes.root}>*/}
+            {/*    <GridList cellHeight={300} className={classes.gridList} cols={2.5}>*/}
+            {/*        {events.map((event) => (*/}
+            {/*            <GridListTile key={event.id}>*/}
+            {/*                <EventCard title={event.title}*/}
+            {/*                           event={event}*/}
+            {/*                           venue={event.venue}*/}
+            {/*                           location={event.location}/>*/}
+            {/*                <GridListTileBar*/}
+            {/*                    // title={event.title}*/}
+            {/*                    classes={{*/}
+            {/*                        root: classes.titleBar,*/}
+            {/*                        title: classes.title,*/}
+            {/*                    }}*/}
+            {/*                    actionIcon={*/}
+            {/*                        <IconButton aria-label={`star ${event.title}`}>*/}
+            {/*                            <StarBorderIcon className={classes.title}/>*/}
+            {/*                        </IconButton>*/}
+            {/*                    }*/}
+            {/*                />*/}
+            {/*            </GridListTile>*/}
+            {/*        ))}*/}
 
 
-                </GridList>
-            </div>
+            {/*    </GridList>*/}
+            {/*</div>*/}
         </>
     )
 
