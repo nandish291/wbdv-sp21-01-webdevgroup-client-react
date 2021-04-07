@@ -5,6 +5,8 @@ import BasicInfo from './basic-info.js'
 import Media from './media.js'
 import Event from './event.js'
 
+//Profile
+
 const Profile = ({imgPath, events, media}) => {
 
 return (
