@@ -2,7 +2,8 @@
 
 import React, {useState, useEffect} from 'react'
 import eventService from '../services/event-service'
-import {Link, useParams, useHistory} from "react-router-dom";
+import {Link, useParams, useHistory, Route} from "react-router-dom";
+
 
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -11,6 +12,7 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import {makeStyles} from "@material-ui/core/styles";
+import LogIn from "../login";
 
 const Search = () => {
 
@@ -64,7 +66,19 @@ const Search = () => {
     const classes = useStyles();
 
     return (
+
         <div>
+
+
+            <Route path={["/login"]}
+                   exact={true}
+                   render={() =>
+                       <LogIn/>}>
+            </Route>
+
+            <button>
+                <Link to="/login">Login</Link>
+            </button>
 
             <h1>Event Search</h1>
             <input
@@ -75,6 +89,7 @@ const Search = () => {
                 value={searchTitle}/>
             <button
                 onClick={() => {
+                    // history.push(`/search/${searchTitle}`)
                     search(searchTitle)
 
                 }}
@@ -109,6 +124,31 @@ const Search = () => {
                     }
                 </ul>
             </div>
+
+
+            <div className="container">
+                <div className="col-md-6">
+                    <h3>Login</h3>
+                    <form>
+                        <div className="form-group">
+                            <input type="text" className="form-control" placeholder="Your Email *" value=""/>
+                        </div>
+                        <div className="form-group">
+                            <input type="password" className="form-control" placeholder="Your Password *" value=""/>
+                        </div>
+                        <div className="form-group">
+                            <input type="submit" className="btnSubmit" value="Sign In"/>
+                        </div>
+                        <div className="form-group">
+                            <input type="submit" className="btnSubmit" value="Sign In With Social"/>
+                        </div>
+                        <div className="form-group">
+                            <a href="#" className="ForgetPwd">Forget Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     )
 }
