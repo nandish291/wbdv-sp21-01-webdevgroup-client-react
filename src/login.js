@@ -9,10 +9,10 @@ const LogIn = () => {
                     <h3>Login</h3>
                     <form>
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="UserName" value=""/>
+                            <input type="text" className="form-control" placeholder="UserName"/>
                         </div>
                         <div className="form-group">
-                            <input type="password" className="form-control" placeholder="Password" value=""/>
+                            <input type="password" className="form-control" placeholder="Password"/>
                         </div>
                         <div className="form-group">
                             <input type="submit" className="btnSubmit" value="Sign In"/>

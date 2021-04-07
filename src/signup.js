@@ -10,19 +10,19 @@ const SignUp = () => {
                     <h3>Sign Up</h3>
                     <form>
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Name *" value=""/>
+                            <input type="text" className="form-control" placeholder="Name"/>
                         </div>
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Username" value=""/>
+                            <input type="text" className="form-control" placeholder="Username"/>
                         </div>
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Password" value=""/>
+                            <input type="text" className="form-control" placeholder="Password"/>
                         </div>
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Confirm Password" value=""/>
+                            <input type="text" className="form-control" placeholder="Confirm Password"/>
                         </div>
                         <div className="form-group">
-                            <input type="password" className="form-control" placeholder="Email Address" value=""/>
+                            <input type="password" className="form-control" placeholder="Email Address"/>
                         </div>
                         <div>
                             <input type="checkbox" id="organizer" name="organizer" value="organizer"/>
