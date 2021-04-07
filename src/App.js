@@ -4,8 +4,9 @@ import home from "./components/home";
 
 function App() {
   return (
+
     <BrowserRouter>
-      <Route path="/" component={home}/>
+      <Route path="/" exact={true} component={home}/>
     </BrowserRouter>
   );
 }

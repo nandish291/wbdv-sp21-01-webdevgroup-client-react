@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,9 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import HomeIcon from '@material-ui/icons/Home';
+import RoomIcon from '@material-ui/icons/Room';
+import {Link} from "react-router-dom";
+import {connect} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -75,7 +78,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PrimarySearchAppBar() {
+const PrimarySearchAppBar=()=> {
+    const[search,setSearch]=useState("")
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -118,15 +122,13 @@ export default function PrimarySearchAppBar() {
                         color="inherit"
                         aria-label="open drawer"
                     >
-                        <MenuIcon />
+                        <HomeIcon/>
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>
                         Event Tracker
                     </Typography>
                     <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
+
                         <InputBase
                             placeholder="Search…"
                             classes={{
@@ -134,8 +136,31 @@ export default function PrimarySearchAppBar() {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            onChange={event => {
+                                setSearch(event.target.value)
+                            }}
+                            value={search}
                         />
                     </div>
+                    <Link to={`/search?name=${search}`}>
+                    <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="open drawer"
+                    >
+                        <SearchIcon/>
+                    </IconButton>
+                    </Link>
+
+                    <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="open drawer"
+                    >
+                        <RoomIcon/>
+                    </IconButton>
                     <div className={classes.grow} />
                     <div >
                         <IconButton
@@ -155,3 +180,6 @@ export default function PrimarySearchAppBar() {
         </div>
     );
 }
+
+
+export default connect()(PrimarySearchAppBar);
