@@ -21,7 +21,7 @@ const ImageContainer=({src,eve,height,width,padding,recommendation=false})=>{
     const style={height,width,padding}
     // console.log("category: ",eve)
     return(
-        <Link to={`/event/${eve.id}`}>
+        <Link to={`event/${eve.id}`}>
             <Box component="span">
                 <img src={src} style={style} alt="Event"/>
                 {

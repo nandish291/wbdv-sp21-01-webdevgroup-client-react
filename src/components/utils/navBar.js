@@ -13,6 +13,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import RoomIcon from '@material-ui/icons/Room';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
+import searchActions from "../../actions/search-actions";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const PrimarySearchAppBar=()=> {
+const PrimarySearchAppBar=(props)=> {
     const[search,setSearch]=useState("")
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -107,7 +108,7 @@ const PrimarySearchAppBar=()=> {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+           <Link style={{textDecoration:'none',color:'black'}} to="/profile"> <MenuItem onClick={handleMenuClose}>Profile</MenuItem></Link>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
         </Menu>
     );
@@ -116,6 +117,7 @@ const PrimarySearchAppBar=()=> {
         <div className={classes.grow}>
             <AppBar position="static">
                 <Toolbar>
+                    <Link to="/" style={{ color: 'white' }}>
                     <IconButton
                         edge="start"
                         className={classes.menuButton}
@@ -124,6 +126,7 @@ const PrimarySearchAppBar=()=> {
                     >
                         <HomeIcon/>
                     </IconButton>
+                    </Link>
                     <Typography className={classes.title} variant="h6" noWrap>
                         Event Tracker
                     </Typography>
@@ -142,14 +145,17 @@ const PrimarySearchAppBar=()=> {
                             value={search}
                         />
                     </div>
-                    <Link to={`/search?name=${search}`}>
+                    <Link to={`/search?name=${search}`}  style={{ color: 'white' }}>
                     <IconButton
                         edge="start"
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
                     >
-                        <SearchIcon/>
+                        <SearchIcon onClick={()=> {
+                            props.searchUpdate(search)
+                            props.searchfunction(search)
+                        }}/>
                     </IconButton>
                     </Link>
 
@@ -181,5 +187,13 @@ const PrimarySearchAppBar=()=> {
     );
 }
 
+const mtsp=(state)=>({
+    searchText: state.search.searchText
+})
 
-export default connect()(PrimarySearchAppBar);
+const dtsp=(dispatch)=>({
+    searchfunction:(text)=> searchActions.findEventsByName(dispatch,text),
+    searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text)
+})
+
+export default connect(mtsp,dtsp)(PrimarySearchAppBar);

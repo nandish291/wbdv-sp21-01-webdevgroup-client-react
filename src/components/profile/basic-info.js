@@ -25,8 +25,6 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                             !editing &&
                             <div>
                                 {fname}
-                                <i onClick={() => { setNewName('')
-                                    return setEditing(true) }} class="fas fa-edit"></i>
                             </div>
                         }
                     </div>
@@ -40,8 +38,6 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                                     value={newName}
                                     placeholder={fname}
                                     className="form-control"/>
-
-                                <i onClick={() => saveName()} className="fas fa-check"></i>
                             </div>
                         }
                     </div>
@@ -53,7 +49,6 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     Last Name
                     <div>
                         {lname}
-                        <i class="fas fa-edit"></i>
                     </div>
 
                 </div>
@@ -67,7 +62,6 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     Email
                     <div>
                         {email}
-                        <i class="fas fa-edit"></i>
                     </div>
 
                 </div>
@@ -77,7 +71,6 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     Password
                     <div>
                         {password}
-                        <i class="fas fa-edit"></i>
                     </div>
 
                 </div>
@@ -91,7 +84,6 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     Date of Birth
                     <div>
                         {dob}
-                        <i class="fas fa-edit"></i>
                     </div>
 
                 </div>
@@ -101,9 +93,42 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     Gender
                     <div>
                         {gender}
-                        <i class="fas fa-edit"></i>
                     </div>
 
+                </div>
+
+            </div>
+
+
+            <br/>
+            <div className="row mt-3">
+
+                <div className="col-6">
+
+                </div>
+
+                <div className="col-6">
+
+
+                    { editing&&
+                    <div>
+                        <button className="btn btn-success"
+                                onClick={() => { setNewName('')
+                                    return setEditing(false) }}
+                        >Save</button>
+                        &nbsp;
+                        &nbsp;
+                        <button className="btn btn-danger"
+                                onClick={() => { setEditing(false) }}
+                        >Cancel</button>
+                    </div>
+                    }
+                    {!editing&&
+                    <button className="btn btn-primary"
+                            onClick={() => { setNewName('')
+                                return setEditing(true) }}
+                    >Edit profile</button>
+                    }
                 </div>
 
             </div>

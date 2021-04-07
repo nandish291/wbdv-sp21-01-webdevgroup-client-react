@@ -7,26 +7,21 @@ import LogIn from "./components/login/login";
 import SignUp from "./components/signUp/signup";
 import Search from "./components/search/search";
 import Profile from './components/profile/profile'
+import SearchResults from "./components/searchResults";
 
 function App() {
   return (
-<>
-    <BrowserRouter>
-      <Route path="/" exact={true} component={home}/>
-      <Route path="/event/:eventId" exact={true} component={EventDetails}/>
-      <Route path="/admin"  component={AdminDashBoard}/>
-        <Route path="/events/search" exact={true}>
-            <Search/>
-        </Route>
-        <Route path="/events/login" exact={true}>
-            <LogIn/>
-        </Route>
-        <Route path="/events/signup" exact={true}>
-            <SignUp/>
-        </Route>
-        <Route path="/profile" exact={true} component={Profile}/>
-    </BrowserRouter>
-</>
+      <>
+        <BrowserRouter>
+          <Route path="/" exact={true} component={home}/>
+          <Route path="/event/:eventId" exact={true} component={EventDetails}/>
+          <Route path="/admin"  component={AdminDashBoard}/>
+          <Route path="/search" component={SearchResults}/>
+          <Route path="/login" exact={true} component={LogIn}/>
+          <Route path="/signup" exact={true} component={SignUp}/>
+          <Route path="/profile" exact={true} component={Profile}/>
+        </BrowserRouter>
+      </>
   );
 }
 

@@ -2,63 +2,74 @@ import React from 'react';
 import './profile-style.css'
 import BasicInfo from './basic-info.js'
 import PrimarySearchAppBar from "../utils/navBar";
+import {Link} from "react-router-dom";
 
 const Profile = () => {
 
     return (
         <>
             <PrimarySearchAppBar/>
-            <div>
+            <div className="container">
+                <br/>
                 <h1>Profile</h1>
-                <div class="row mt-3">
+                <br/>
+                <div className="row">
 
-                    <div class="col-sm-4 profile">
+                    <div className="card col-3">
+                        <br/>
 
-                        <div>
-                            <img src="https://raw.githubusercontent.com/chayank-neu/wbdv-sp21-01-webdevgroup-client-react/user/shaili/profile/src/imgs/profile.jpg" class="profile-pic" />
+
+
+                        <div className="text-center">
+                            <img src="https://raw.githubusercontent.com/chayank-neu/wbdv-sp21-01-webdevgroup-client-react/user/shaili/profile/src/imgs/profile.jpg"
+                                 className="card-img-top profile-pic" />
                         </div>
 
-                        <div class="mt-3">
-                            <button type="button" class="btn btn-primary">Edit Profile</button>
+                        <div className="card-body">
+                            <h5 className="card-title text-center">Shaili gandhi</h5>
+                            <p className="card-text text-center">Some quick example text to build on the card title and make up the
+                                bulk of the card's content.</p>
                         </div>
-
                     </div>
 
-                    <div class="col-sm-8">
+                    <div className="col-9">
 
-                        <div class="row">
-
-                            <ul class="nav nav-pills">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#">Basic Info</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Media</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">My Events</a>
-                                </li>
-                            </ul>
-
+                        <div className="card">
+                            <div className="card-header">
+                                <ul className="nav nav-tabs card-header-tabs">
+                                    <li className="nav-item">
+                                        <Link className="nav-link active" aria-current="true" to="#">Basic Info</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="#">Media</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="#">My Events</Link>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="card-body">
+                                <BasicInfo fname={"Shaili"}
+                                           lname={"Gandhi"}
+                                           email={"abd@gmail.com"}
+                                           password={"123456"}
+                                           dob={"2/23/1992"}
+                                           gender={"male"} />
+                            </div>
                         </div>
 
-                        <div class="row mt-3">
+                        {/*<div className="row mt-3">*/}
 
-                            <BasicInfo fname={"Shaili"}
-                                       lname={"Gandhi"}
-                                       email={"abd@gmail.com"}
-                                       password={"123456"}
-                                       dob={"2/23/1992"}
-                                       gender={"male"} />
 
-                            {
-                                /*
-                                <Media pictures = {media} />
-                                <Event events = {events} />
-                                */
-                            }
 
-                        </div>
+                        {/*{*/}
+                        {/*    /**/}
+                        {/*    <Media pictures = {media} />*/}
+                        {/*    <Event events = {events} />*/}
+                        {/*    */}
+                        {/*}*/}
+
+                        {/*</div>*/}
 
                     </div>
 
