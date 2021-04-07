@@ -1,9 +1,6 @@
-// jose’s code in working state and it does actual search not just london
-
 import React, {useState, useEffect} from 'react'
 import eventService from '../services/event-service'
-import {Link, useParams, useHistory, Route} from "react-router-dom";
-
+import {useParams, useHistory} from "react-router-dom";
 
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -12,33 +9,79 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import {makeStyles} from "@material-ui/core/styles";
-import LogIn from "../login";
+
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 const Search = () => {
 
-    const {title} = useParams();
-    const [searchTitle, setSearchTitle] = useState("");
+
+    // export default function FullWidthGrid() {
+    //     const classes = useStyles();
+    //
+    //     return (
+    //         <div className={classes.root}>
+    //             <Grid container spacing={3}>
+    //                 <Grid item xs={12}>
+    //                     <Paper className={classes.paper}>xs=12</Paper>
+    //                 </Grid>
+    //                 <Grid item xs={12} sm={6}>
+    //                     <Paper className={classes.paper}>xs=12 sm=6</Paper>
+    //                 </Grid>
+    //                 <Grid item xs={12} sm={6}>
+    //                     <Paper className={classes.paper}>xs=12 sm=6</Paper>
+    //                 </Grid>
+    //                 <Grid item xs={6} sm={3}>
+    //                     <Paper className={classes.paper}>xs=6 sm=3</Paper>
+    //                 </Grid>
+    //                 <Grid item xs={6} sm={3}>
+    //                     <Paper className={classes.paper}>xs=6 sm=3</Paper>
+    //                 </Grid>
+    //                 <Grid item xs={6} sm={3}>
+    //                     <Paper className={classes.paper}>xs=6 sm=3</Paper>
+    //                 </Grid>
+    //                 <Grid item xs={6} sm={3}>
+    //                     <Paper className={classes.paper}>xs=6 sm=3</Paper>
+    //                 </Grid>
+    //             </Grid>
+    //         </div>
+    //     );
+    // }
+
+    const {name} = useParams();
+    const [searchName, setSearchName] = useState("");
     const [results, setResults] = useState({Search: []});
     const [events, setEvents] = useState([])
     const history = useHistory();
-
     useEffect(() => {
-        setSearchTitle(title)
-        if (title) {
-            eventService.findEventByTitle(title)
+        setSearchName(name)
+        if (name) {
+            eventService.findEventByTitle(name)
                 .then(results => setResults(results))
             console.log(results)
         }
-    }, [title])
+    }, [name])
 
-    const search = (searchTitle) => {
-        eventService.findEventByTitle(searchTitle)
+    const search = (searchName) => {
+
+        eventService.findEventByTitle(searchName)
             .then(events => {
                 events = events.events
                 console.log(events)
                 setEvents(events)
             })
     }
+
+    // const useStyles = makeStyles((theme) => ({
+    //     root: {
+    //         flexGrow: 1,
+    //     },
+    //     paper: {
+    //         padding: theme.spacing(2),
+    //         textAlign: 'center',
+    //         color: theme.palette.text.secondary,
+    //     },
+    // }));
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -69,28 +112,17 @@ const Search = () => {
 
         <div>
 
-
-            <Route path={["/login"]}
-                   exact={true}
-                   render={() =>
-                       <LogIn/>}>
-            </Route>
-
-            <button>
-                <Link to="/login">Login</Link>
-            </button>
-
             <h1>Event Search</h1>
             <input
                 onChange={(event) => {
-                    setSearchTitle(event.target.value)
+                    setSearchName(event.target.value)
                 }}
                 className="form-control"
-                value={searchTitle}/>
+                value={searchName}/>
             <button
                 onClick={() => {
-                    // history.push(`/search/${searchTitle}`)
-                    search(searchTitle)
+                    // history.push(`/search/${searchName}`)
+                    search(searchName)
 
                 }}
                 className="btn btn-primary btn-block">
@@ -104,7 +136,7 @@ const Search = () => {
                             {events.map((event) => (
 
                                 <GridListTile key={event.id}>
-                                    <EventCard title={event.title}
+                                    <EventCard name={event.name}
                                                id={event.id}
                                     />
                                     <GridListTileBar
@@ -113,7 +145,7 @@ const Search = () => {
                                             title: classes.title,
                                         }}
                                         actionIcon={
-                                            <IconButton aria-label={`star ${event.title}`}>
+                                            <IconButton aria-label={`star ${event.name}`}>
                                                 <StarBorderIcon className={classes.title}/>
                                             </IconButton>
                                         }
@@ -124,31 +156,6 @@ const Search = () => {
                     }
                 </ul>
             </div>
-
-
-            <div className="container">
-                <div className="col-md-6">
-                    <h3>Login</h3>
-                    <form>
-                        <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Your Email *" value=""/>
-                        </div>
-                        <div className="form-group">
-                            <input type="password" className="form-control" placeholder="Your Password *" value=""/>
-                        </div>
-                        <div className="form-group">
-                            <input type="submit" className="btnSubmit" value="Sign In"/>
-                        </div>
-                        <div className="form-group">
-                            <input type="submit" className="btnSubmit" value="Sign In With Social"/>
-                        </div>
-                        <div className="form-group">
-                            <a href="#" className="ForgetPwd">Forget Password?</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
         </div>
     )
 }

@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 const EventCard = (
     {
         id,
-        title,
+        name,
         venue,
         location
 
@@ -43,8 +43,7 @@ const EventCard = (
                     />
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="h2">
-                            {id}
-                            {/*{title}*/}
+                            {name}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

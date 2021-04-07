@@ -7,7 +7,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import {Link, Route} from "react-router-dom";
+import {BrowserRouter, Link, Route} from "react-router-dom";
 import LogIn from "../../login";
 import Search from "../search";
 
@@ -26,9 +26,8 @@ class EventGrid
             <div>
                 <h2>Upcoming Events</h2>
 
-                <Route path="/events/search" exact={true}>
-                    <Search/>
-                </Route>
+                {/*<Route path="/events/search" exact={true}*/}
+                {/*       component={Search}/>*/}
 
                 <Link to="events/login">
                     <i className="fas fa-2x fa-sign-in-alt"/>

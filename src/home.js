@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from "react-router-dom";
 
 export default () =>
-    <>
+    <div>
         <h1>Home</h1>
         <div className="list-group">
             <Link to="events/login" className="list-group-item">
@@ -11,39 +11,8 @@ export default () =>
             <Link to="events/search" className="list-group-item">
                 Search
             </Link>
+            <Link to="events/signup" className="list-group-item">
+                Sign Up
+            </Link>
         </div>
-
-
-        <div className="container">
-            <div className="col-md-6">
-                <h3>Sign Up</h3>
-                <form>
-                    <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Name *" value=""/>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Username" value=""/>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Password" value=""/>
-                    </div>
-                    <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Confirm Password" value=""/>
-                    </div>
-                    <div className="form-group">
-                        <input type="password" className="form-control" placeholder="Email Address" value=""/>
-                    </div>
-                    <div>
-                    <input type="checkbox" id="organizer" name="organizer" value="organizer"/>
-                        <label htmlFor="vehicle1">Artist/Organizer</label>
-                    </div>
-                    <div className="form-group">
-                        <input type="submit" className="btnSubmit" value="Sign Up"/>
-                    </div>
-                    <div className="form-group">
-                        <input type="submit" className="btnSubmit" value="Sign Up With Social"/>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </>
+    </div>
