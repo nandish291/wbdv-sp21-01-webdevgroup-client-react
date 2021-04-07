@@ -5,6 +5,7 @@ import eventService, {findEventById} from "../../services/event-service";
 import {combineReducers, createStore} from "redux";
 import {Provider,connect} from "react-redux";
 import './event-details.css';
+import Moment from 'moment';
 
 
 const EventDetails = (
@@ -14,6 +15,10 @@ const EventDetails = (
     }
 ) =>
 {
+
+    Moment.locale('en');
+    var dt = event.eventDateLocal;
+
     const {eventId} = useParams()
 
     useEffect(() => {
@@ -39,9 +44,23 @@ const EventDetails = (
                                 Every year they perform at this festival just for the fans.</p>
                         </div>
                         <ul className="list-group list-group-flush">
-                            {/*<li className="list-group-item">Artist: {event.ancestors.performers.map(p => <b>{p.name}</b>)}</li>*/}
-                            {/*<li className="list-group-item">Venue: <b>{event.venue.name}</b></li>*/}
-                            <li className="list-group-item">Date: <b>{event.eventDateLocal}</b></li>
+                            <li className="list-group-item">Artist: {
+
+                                !(event.ancestors === undefined)&&
+                                event.ancestors.performers.map(p => <b>{p.name}</b>)
+
+                            }</li>
+                            <li className="list-group-item">Venue: <b>
+                                {
+
+                                    !(event.venue === undefined)&&
+                                    event.venue.name
+
+                                }
+                                </b>
+                            </li>
+                            <li className="list-group-item">Date: <b>{Moment(dt).format('MM-DD-YYYY')}</b></li>
+                            <li className="list-group-item">Time: <b>{Moment(dt).format('HH:mm')}</b></li>
                         </ul>
                     </div>
                     }
