@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/.idea
+wbdv-sp21-01-webdevgroup-client-react.iml
