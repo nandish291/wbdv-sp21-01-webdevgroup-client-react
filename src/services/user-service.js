@@ -1,5 +1,6 @@
 export const createUser = (name, username, password, confirmPassword, email) =>
-    fetch(`http://localhost:8080/api/register/${name}/${username}/${password}/${confirmPassword}/${email}`, {
+    fetch(`http://localhost:8080/api/register/${username}`, {
+        // TODO: reconcile for where I deleted extra attributes from path
         method: 'POST',
         body: JSON.stringify(
             {

@@ -88,17 +88,17 @@ const SignUp = () => {
                                    onChange={(e) => {
                                        setEmail(e.target.value)
                                        setCachedItem({... cachedItem, email: e.target.value})
+                                       console.log(cachedItem.email)
                                    }}
 
                             />
                         </div>
                         <div className="form-group mb-3 ">
                             <button className="btn btn-primary"
-                                    onClick={() => createUser(name, username, password, email)
+                                    onClick={() => createUser(name, username, password, confirmPassword, email)
                                         .then(response => {
-                                            setCurrentUser(response)
+                                            // setCurrentUser(response)
                                             console.log(response)
-                                            console.log("test"+currentUser) // this is returning null
                                             history.push("/api/login")
                                         })
                                     }

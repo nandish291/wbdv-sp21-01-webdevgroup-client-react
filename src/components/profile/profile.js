@@ -14,17 +14,15 @@ const Profile = () => {
         email: ''
     }
 
-    const [state, setState] = useState({})
+    const [state, setState] = useState(user)
     useEffect(() => {
         fetch(`http://localhost:8080/currentUser`, {
             method: 'GET',
             credentials: "include"
         }).then(response => response.json())
-            .then(currentUser => setState({
-                currentUser: currentUser
-            })
+            .then(currentUser => setState(currentUser)
         )
-    })
+    }, [])
 
 
     return (
