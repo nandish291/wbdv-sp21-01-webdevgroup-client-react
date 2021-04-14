@@ -1,14 +1,15 @@
-export const createUser = (name, username, password, email) =>
-    fetch(`http://localhost:8080/api/register/${name}/${username}/${password}/${email}`, {
+export const createUser = (name, username, password, confirmPassword, email) =>
+    fetch(`http://localhost:8080/api/register/${name}/${username}/${password}/${confirmPassword}/${email}`, {
         method: 'POST',
         body: JSON.stringify(
             {
                 name: name,
                 username: username,
                 password: password,
+                confirmPassword: confirmPassword,
                 email: email
             }),
-        // credentials: "include",
+        credentials: "include",
         headers: {
             'content-type': 'application/json'
         }

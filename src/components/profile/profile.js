@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './profile-style.css'
 import BasicInfo from './basic-info.js'
 import PrimarySearchAppBar from "../utils/navBar";
@@ -6,12 +6,34 @@ import {Link} from "react-router-dom";
 
 const Profile = () => {
 
+    const user = {
+        name: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        email: ''
+    }
+
+    const [state, setState] = useState({})
+    useEffect(() => {
+        fetch(`http://localhost:8080/currentUser`, {
+            method: 'GET',
+            credentials: "include"
+        }).then(response => response.json())
+            .then(currentUser => setState({
+                currentUser: currentUser
+            })
+        )
+    })
+
+
     return (
         <>
             <PrimarySearchAppBar/>
             <div className="container">
                 <br/>
                 <h1>Profile</h1>
+                Hello {state.name}
                 <br/>
                 <div className="row">
 
