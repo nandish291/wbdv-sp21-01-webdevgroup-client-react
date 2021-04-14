@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import PrimarySearchAppBar from "../utils/navBar";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {createUser} from "../../services/user-service";
 
 const SignUp = () => {
@@ -8,9 +8,22 @@ const SignUp = () => {
     const [name, setName] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [email, setEmail] = useState("")
 
-    const [currentUser, setCurrentUser] = useState(null)
+    const [currentUser, setCurrentUser] = useState()
+
+    const history = useHistory();
+
+    const user = {
+        name: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        email: ''
+    }
+
+    const [cachedItem, setCachedItem] = useState(user)
 
     return (
         <>
@@ -27,33 +40,55 @@ const SignUp = () => {
                             <input type="text"
                                    className="form-control"
                                    placeholder="Name"
-                                   onChange={(e) => setName(e.target.value)}
+                                   value={cachedItem.name}
+                                   onChange={(e) => {
+                                       setName(e.target.value)
+                                       setCachedItem({... cachedItem, name: e.target.value})
+                                   }}
                             />
                         </div>
                         <div className="form-group mb-3">
                             <input type="text"
                                    className="form-control"
                                    placeholder="Username"
-                                   onChange={(e) => setUsername(e.target.value)}
+                                   value={cachedItem.username}
+                                   onChange={(e) => {
+                                       setUsername(e.target.value)
+                                       setCachedItem({... cachedItem, username: e.target.value})
+                                   }}
                             />
                         </div>
                         <div className="form-group mb-3">
                             <input type="password"
                                    className="form-control"
-                                   placeholder="Password"/>
+                                   value={cachedItem.password}
+                                   placeholder="Password"
+                                   onChange={(e) => {
+                                       setPassword(e.target.value)
+                                       setCachedItem({... cachedItem, password: e.target.value})
+                                   }}
+                            />
                         </div>
                         <div className="form-group mb-3">
                             <input type="password"
                                    className="form-control"
                                    placeholder="Confirm Password"
-                                   onChange={(e) => setPassword(e.target.value)}
+                                   value={cachedItem.confirmPassword}
+                                   onChange={(e) => {
+                                       setConfirmPassword(e.target.value)
+                                       setCachedItem({... cachedItem, confirmPassword: e.target.value})
+                                   }}
                             />
                         </div>
                         <div className="form-group mb-3">
                             <input type="email"
                                    className="form-control"
                                    placeholder="Email Address"
-                                   onChange={(e) => setEmail(e.target.value)}
+                                   value={cachedItem.email}
+                                   onChange={(e) => {
+                                       setEmail(e.target.value)
+                                       setCachedItem({... cachedItem, email: e.target.value})
+                                   }}
 
                             />
                         </div>
@@ -64,6 +99,7 @@ const SignUp = () => {
                                             setCurrentUser(response)
                                             console.log(response)
                                             console.log("test"+currentUser) // this is returning null
+                                            history.push("/api/login")
                                         })
                                     }
                                     type="button"
@@ -73,7 +109,7 @@ const SignUp = () => {
                         </div>
 
                         <div id="signUpHelp" className="form-text">Already have an account? <Link
-                            to="/login">Sign-In</Link></div>
+                            to="api/login">Sign-In</Link></div>
                     </form>
                 </div>
 

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import PrimarySearchAppBar from "../utils/navBar";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {logIn} from "../../services/user-service"
 
 const LogIn = () => {
@@ -9,6 +9,8 @@ const LogIn = () => {
     const [passwordLog, setPasswordLog] = useState("")
 
     const [loggedIn, setLoggedIn] = useState(false)
+
+    const history = useHistory()
 
     return (
         <>
@@ -41,6 +43,9 @@ const LogIn = () => {
                                         .then(response => {
                                             if (response) {
                                                 setLoggedIn(true)
+                                                console.log(response)
+                                                history.push("/profile")
+
                                             } else {
                                                 console.log(response)
                                                 alert("Username or password incorrect. Try again.")

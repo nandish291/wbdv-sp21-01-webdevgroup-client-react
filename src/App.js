@@ -21,7 +21,7 @@ function App() {
           <Route path="/event/:eventId" exact={true} component={EventDetails}/>
           <Route path="/admin"  component={AdminDashBoard}/>
           <Route path="/search" component={SearchResults}/>
-          <Route path="/login" exact={true} component={LogIn}/>
+          <Route path="/api/login" exact={true} component={LogIn}/>
           <Route path="/signup" exact={true} component={SignUp}/>
           <Route path="/profile" exact={true} component={Profile}/>
         </BrowserRouter>
