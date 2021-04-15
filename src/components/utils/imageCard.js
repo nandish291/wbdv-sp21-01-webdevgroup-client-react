@@ -5,6 +5,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -13,6 +14,9 @@ const useStyles = makeStyles({
         minHeight: '30vh',
         maxHeight:'50vh'
     },
+    text: {
+        textDecoration: 'none'
+    }
 });
 
 export default function ImgMediaCard({event}) {
@@ -20,6 +24,7 @@ export default function ImgMediaCard({event}) {
 
     return (
         <Card className={classes.root}>
+            <Link to={`/event/${event.id}`}>
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -28,7 +33,7 @@ export default function ImgMediaCard({event}) {
                     image={event.performers[0].image}
                     title={event.title}
                 />
-                <CardContent>
+                <CardContent >
                     <Typography gutterBottom variant="h5" component="h2">
                         {event.title}
                     </Typography>
@@ -40,6 +45,7 @@ export default function ImgMediaCard({event}) {
                     </Typography>
                 </CardContent>
             </CardActionArea>
+            </Link>
         </Card>
     );
 }
