@@ -7,10 +7,12 @@ import {Link} from "react-router-dom";
 const Profile = () => {
 
     const user = {
-        name: '',
+        firstName: '',
+        lastName: '',
+        dob: '',
+        gender: '',
         username: '',
         password: '',
-        confirmPassword: '',
         email: ''
     }
 
@@ -31,7 +33,7 @@ const Profile = () => {
             <div className="container">
                 <br/>
                 <h1>Profile</h1>
-                Hello {state.name}
+                Hello {state.firstName}
                 <br/>
                 <div className="row">
 
