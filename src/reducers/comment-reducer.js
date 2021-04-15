@@ -1,6 +1,7 @@
 
 const initialState = {
-    comments: []
+    comments: [],
+    comment:[]
 }
 
 const commentReducer = (state=initialState, action) => {
@@ -11,22 +12,21 @@ const commentReducer = (state=initialState, action) => {
                 comments: action.comments
             }
 
-        case "CREATE_TOPIC":
+        case "ADD_COMMENT_BY_USER_FOR_EVENT":
             return {
                 ...state,
-                topics: [
-                    ...state.topics,
-                    action.topic
+                comments: [
+                    ...state.comments,
+                    action.comment
                 ]
             }
-        case "UPDATE_TOPIC":
+        case "UPDATE_COMMENT":
             return {
-                topics: state.topics.map(m => {
-                    if(m._id === action.topic._id) {
-                        return action.topic
-                    } else {
-                        return m
+                comments: state.comments.map(m => {
+                    if(m.id === action.comment.id) {
+                        m.likes=m.likes+1
                     }
+                    return m
                 })
             }
         default:

@@ -1,4 +1,4 @@
-import React, {useEffect}  from 'react'
+import React, {useEffect,useState}  from 'react'
 import {Link, useParams} from "react-router-dom";
 import eventService from "../../services/event-service";
 import commentService from "../../services/comment-service";
@@ -24,22 +24,34 @@ const isEventInAttended=(event,user)=>{
     return false
 }
 
+const isEventOver=(eventDate,today)=>{
+
+    return (eventDate.diff(today)<0);
+
+
+}
+
 
 const EventDetails = (
     {
         event,
         user,
+        comments,
         findEventById,
         findUserById,
         addEventToInterestedForUser,
         deleteEventFromInterestedForUser,
         addEventToAttendingForUser,
         deleteEventFromAttendingForUser,
-        findCommentsByEvent
+        findCommentsByEvent,
+        addCommentForEvent,
+        updateCommentForEvent
+
     }
 ) =>
 {
 
+    const [cachedItem, setCahedItem] = useState('')
     Moment.locale('en');
     var dt = event.datetime_local;
 
@@ -146,7 +158,9 @@ const EventDetails = (
                                                }
                                                checked={isEventInAttended(event,user)}/>
                                         <label className="form-check-label"
-                                               htmlFor="flexSwitchCheckDefault1">Attending/Attended</label>
+                                               htmlFor="flexSwitchCheckDefault1">{
+                                                   isEventOver(Moment(dt),Moment.locale())?'Attended':'Attending'
+                                        }</label>
                                     </div>
 
                                 </div>
@@ -177,9 +191,6 @@ const EventDetails = (
                                 <li className="nav-item">
                                     <Link className="nav-link" to="#">Photos</Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="#">Videos</Link>
-                                </li>
                             </ul>
                         </div>
                         <div className="card-body">
@@ -191,27 +202,54 @@ const EventDetails = (
                                             <img
                                                 className="img-fluid img-responsive rounded-circle mr-2"
                                                 src="https://i.imgur.com/qdiP4DB.jpg" width="38"/> &nbsp;
-                                            <input type="text" className="form-control mr-3" placeholder="Add comment"/>
+                                            <input type="text"
+                                                   className="form-control mr-3"
+                                                   placeholder="Add comment"
+                                                   onChange={(e)=>setCahedItem(e.target.value)}
+                                                   value={cachedItem}
+                                            />
                                             &nbsp;
-                                            <button className="btn btn-primary" type="button">Comment</button></div>
-                                        <div className="commented-section mt-2">
-                                            <div className="d-flex flex-row align-items-center commented-user">
-                                                <h5 className="mr-2">Corey oates</h5> <span
-                                                className="dot mb-1"></span><span className="mb-1 ml-2">4 hours ago</span>
-                                            </div>
-                                            <div className="comment-text-sm">
-                                                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                                                ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>
-                                            </div>
-                                            <div className="reply-section">
-                                                <div className="d-flex flex-row align-items-center voting-icons">
-                                                    <span className="ml-2">10</span>
-                                                    <span className="dot ml-2"></span>
-                                                    <Link><h6 className="ml-2 mt-1">Like</h6></Link>
+                                            <button onClick={()=>{
+                                                // if(cachedItem){
+                                                //     alert('Enter comment')
+                                                //     return
+                                                // }
+                                                const com = {
+                                                    user: user,
+                                                    event: event,
+                                                    comment: cachedItem,
+                                                    userName: user.userName,
+                                                    likes: 0
+                                                }
+                                                addCommentForEvent(com)
+                                                setCahedItem('')
+
+                                            }} className="btn btn-primary" type="button">Comment</button></div>
+                                        {
+                                            comments &&
+                                            comments.map(comment=>
+
+                                                <div className="commented-section mt-2">
+                                                    <div className="d-flex flex-row align-items-center commented-user">
+                                                        <h5 className="mr-2">{comment.userName}</h5>
+                                                    </div>
+                                                    <div className="comment-text-sm">
+                                                        <span>{comment.comment}</span>
+                                                    </div>
+                                                    <div className="reply-section">
+                                                        <div className="d-flex flex-row align-items-center voting-icons">
+                                                            <span className="ml-2">{comment.likes}&nbsp;</span>
+                                                            <span className="dot ml-2"></span>
+                                                            <Link onClick={()=>{
+                                                                updateCommentForEvent(comment)
+                                                            }}> <h6 className="ml-2 mt-1">&nbsp; Like</h6></Link>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+
+                                            )
+                                        }
+
 
 
                                     </div>
@@ -237,7 +275,8 @@ const EventDetails = (
 const stpm = (state) => {
     return {
         event: state.eventReducer.event,
-        user: state.userReducer.user
+        user: state.userReducer.user,
+        comments:state.commentReducer.comments
     }
 }
 const dtpm = (dispatch) => {
@@ -262,6 +301,7 @@ const dtpm = (dispatch) => {
                     })
                 })
         },
+
         addEventToInterestedForUser: (uid,event) => {
             userService.addEventToInterestedForUser(uid, event)
                 .then(user => dispatch({
@@ -276,6 +316,7 @@ const dtpm = (dispatch) => {
                     user: user
                 }))
         },
+
         addEventToAttendingForUser: (uid,event) => {
             userService.addEventToAttendingForUser(uid, event)
                 .then(user => dispatch({
@@ -290,22 +331,26 @@ const dtpm = (dispatch) => {
                     user: user
                 }))
         },
+
         findCommentsByEvent: (eid) => {
             commentService.findCommentsForEvent(eid)
                 .then(eventdetails => {
-                    console.log(eventdetails);
                     dispatch({
                         type: "FIND_COMMENTS_FOR_EVENT",
-                        comments: eventdetails.comments
+                        comments: eventdetails.comment
                     })
                 })
         },
+
         addCommentForEvent: (comment) => {
             commentService.addCommentForEvent(comment)
-                .then(status => dispatch({
-                    type: "ADD_COMMENT_BY_USER_FOR_EVENT",
-                    comment: comment
-                }))
+                .then(status => {
+                    dispatch({
+                        type: "ADD_COMMENT_BY_USER_FOR_EVENT",
+                        comment: comment
+                    })
+                }
+                )
         },
         updateCommentForEvent: (comment) => {
             commentService.updateCommentForEvent(comment)
