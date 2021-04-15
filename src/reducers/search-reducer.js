@@ -1,4 +1,3 @@
-import React, {useState} from 'react'
 import {FIND_EVENTS_BY_NAME,SEARCH_TEXT_UPDATE} from "../actions/search-actions";
 
 

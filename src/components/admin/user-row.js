@@ -1,9 +1,8 @@
-import React, {useState} from 'react'
-import {Link} from "react-router-dom";
+import React from 'react'
 
 const UserRow = ({item}) => {
-    const [editing, setEditing] = useState(false)
-    const [cachedItem, setCahedItem] = useState(item)
+    // const [editing, setEditing] = useState(false)
+    // const [cachedItem, setCahedItem] = useState(item)
 
     return (
         <>

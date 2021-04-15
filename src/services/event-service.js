@@ -1,4 +1,4 @@
-const EVENT_URL = "http://webdev-group-sp2101-server.herokuapp.com";
+const EVENT_URL = "https://webdev-group-sp2101-server.herokuapp.com";
 
 
 export const getAllEvents = () =>
