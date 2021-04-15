@@ -5,7 +5,6 @@ import EventDetails from "./components/event-details/event-details";
 import AdminDashBoard from "./components/admin/admin-dashboard";
 import LogIn from "./components/login/login";
 import SignUp from "./components/signUp/signup";
-import Search from "./components/search/search";
 import Profile from './components/profile/profile'
 import SearchResults from "./components/searchResults";
 

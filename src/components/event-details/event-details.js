@@ -1,8 +1,7 @@
 import React, {useEffect}  from 'react'
 import {Link, useParams} from "react-router-dom";
-import eventService, {findEventById} from "../../services/event-service";
-import {combineReducers, createStore} from "redux";
-import {Provider,connect} from "react-redux";
+import eventService from "../../services/event-service";
+import {connect} from "react-redux";
 import './event-details.css';
 import Moment from 'moment';
 import PrimarySearchAppBar from "../utils/navBar";
