@@ -1,10 +1,21 @@
-import React from 'react';
+import {React, useState} from 'react';
 import './profile-style.css'
 import BasicInfo from './basic-info.js'
+import Media from './media.js'
+import Event from './event.js'
 import PrimarySearchAppBar from "../utils/navBar";
 import {Link} from "react-router-dom";
+import event1 from '../imgs/event1.jpg'
+import event2 from '../imgs/event2.jpg'
+import event3 from '../imgs/event3.jpg'
+import media1 from '../imgs/media1.jpg'
+import media2 from '../imgs/media2.jpg'
 
 const Profile = () => {
+
+    const [tab1, setTab1] = useState(true)
+    const [tab2, setTab2] = useState(false)
+    const [tab3, setTab3] = useState(false)
 
     return (
         <>
@@ -38,38 +49,64 @@ const Profile = () => {
                             <div className="card-header">
                                 <ul className="nav nav-tabs card-header-tabs">
                                     <li className="nav-item">
-                                        <Link className="nav-link active" aria-current="true" to="#">Basic Info</Link>
+                                        <Link className={`nav-link ${tab1 === true ? 'active':''} `} aria-current="true" to="#"
+                                              onClick = {() => {
+                                                setTab1(true)
+                                                setTab2(false)
+                                                setTab3(false)
+                                              }}>
+                                                Basic Info
+                                        </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="#">Media</Link>
+                                        <Link className={`nav-link ${tab2 === true ? 'active':''} `} aria-current="true" to="#"
+                                              onClick = {() => {
+                                                setTab1(false)
+                                                setTab2(true)
+                                                setTab3(false)
+                                              }}>
+                                                Media
+                                        </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="#">My Events</Link>
+                                        <Link className={`nav-link ${tab3 === true ? 'active':''} `} aria-current="true" to="#"
+                                              onClick = {() => {
+                                                setTab1(false)
+                                                setTab2(false)
+                                                setTab3(true)
+                                              }}>
+                                                Event
+                                        </Link>
                                     </li>
                                 </ul>
                             </div>
-                            <div className="card-body">
-                                <BasicInfo fname={"Shaili"}
-                                           lname={"Gandhi"}
-                                           email={"abd@gmail.com"}
-                                           password={"123456"}
-                                           dob={"2/23/1992"}
-                                           gender={"male"} />
-                            </div>
+                            { tab1 &&
+                                <div className="card-body">
+
+                                        <BasicInfo fname={"Shaili"}
+                                                   lname={"Gandhi"}
+                                                   email={"abd@gmail.com"}
+                                                   password={"123456"}
+                                                   dob={"2/23/1992"}
+                                                   gender={"female"} />
+
+                                </div>
+                            }
+                            { tab2 &&
+                                <div className="card-body">
+
+                                       <Media pictures = {[media1, media2]} />
+
+                                </div>
+                            }
+                            { tab3 &&
+                                <div className="card-body">
+
+                                       <Event events = {[event1, event2, event3]} />
+
+                                </div>
+                            }
                         </div>
-
-                        {/*<div className="row mt-3">*/}
-
-
-
-                        {/*{*/}
-                        {/*    /**/}
-                        {/*    <Media pictures = {media} />*/}
-                        {/*    <Event events = {events} />*/}
-                        {/*    */}
-                        {/*}*/}
-
-                        {/*</div>*/}
 
                     </div>
 

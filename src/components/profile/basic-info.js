@@ -3,7 +3,12 @@ import {React, useState} from 'react';
 const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
     const [editing, setEditing] = useState(false)
-    const [newName, setNewName] = useState(fname)
+    const [newfName, setNewfName] = useState(fname)
+    const [newlName, setNewlName] = useState(lname)
+    const [newEmail, setNewEmail] = useState(email)
+    const [newPassword, setNewPassword] = useState(password)
+    const [newDOB, setNewDOB] = useState(dob)
+    const [newGender, setNewGender] = useState(gender)
 
     const saveName = () => {
         setEditing(false)
@@ -34,8 +39,8 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                             editing &&
                             <div>
                                 <input
-                                    onChange={(event) => setNewName(event.target.value)}
-                                    value={newName}
+                                    onChange={(event) => setNewfName(event.target.value)}
+                                    value={newfName}
                                     placeholder={fname}
                                     className="form-control"/>
                             </div>
@@ -47,8 +52,24 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                 <div class="col-sm-6">
 
                     Last Name
+
+                    { !editing &&
+                        <div>
+                            {lname}
+                        </div>
+                    }
+
                     <div>
-                        {lname}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(event) => setNewlName(event.target.value)}
+                                    value={newlName}
+                                    placeholder={lname}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -60,8 +81,24 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                 <div class="col-sm-6">
 
                     Email
+
+                    { !editing &&
+                        <div>
+                            {email}
+                        </div>
+                    }
+
                     <div>
-                        {email}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(event) => setNewEmail(event.target.value)}
+                                    value={newEmail}
+                                    placeholder={email}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -69,8 +106,24 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                 <div class="col-sm-6">
 
                     Password
+
+                    { !editing &&
+                        <div>
+                            {password}
+                        </div>
+                    }
+
                     <div>
-                        {password}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(event) => setNewPassword(event.target.value)}
+                                    value={newPassword}
+                                    placeholder={password}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -82,17 +135,50 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                 <div class="col-sm-6">
 
                     Date of Birth
+
+                    { !editing &&
+                        <div>
+                            {dob}
+                        </div>
+                    }
+
                     <div>
-                        {dob}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(event) => setNewDOB(event.target.value)}
+                                    value={newDOB}
+                                    placeholder={dob}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
+
 
                 </div>
 
                 <div class="col-sm-6">
 
                     Gender
+
+                    { !editing &&
+                        <div>
+                            {gender}
+                        </div>
+                    }
+
                     <div>
-                        {gender}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(event) => setNewGender(event.target.value)}
+                                    value={newGender}
+                                    placeholder={gender}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -113,7 +199,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     { editing&&
                     <div>
                         <button className="btn btn-success"
-                                onClick={() => { setNewName('')
+                                onClick={() => { setNewfName('')
                                     return setEditing(false) }}
                         >Save</button>
                         &nbsp;
@@ -125,7 +211,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     }
                     {!editing&&
                     <button className="btn btn-primary"
-                            onClick={() => { setNewName('')
+                            onClick={() => { setNewfName('')
                                 return setEditing(true) }}
                     >Edit profile</button>
                     }
