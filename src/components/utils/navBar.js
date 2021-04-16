@@ -14,6 +14,7 @@ import RoomIcon from '@material-ui/icons/Room';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import searchActions from "../../actions/search-actions";
+import {findLocation} from "../../actions/navBar-actions";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -90,7 +91,13 @@ const PrimarySearchAppBar=(props)=> {
         setAnchorEl(event.currentTarget);
     };
 
+    const getLocation=async()=>{
+        if('geolocation' in navigator)
+        {
+            navigator.geolocation.getCurrentPosition(response=> props.findUserLocation(response.coords));
 
+        }
+    }
 
     const handleMenuClose = () => {
         setAnchorEl(null);
@@ -158,11 +165,12 @@ const PrimarySearchAppBar=(props)=> {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
-                    >
-                        <SearchIcon onClick={()=> {
+                        onClick={()=> {
                             props.searchUpdate(search)
                             props.searchfunction(search)
-                        }}/>
+                        }}
+                    >
+                        <SearchIcon/>
                     </IconButton>
                     </Link>
 
@@ -171,9 +179,14 @@ const PrimarySearchAppBar=(props)=> {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
+                        onClick={getLocation}
                     >
                         <RoomIcon/>
+                        <Typography variant="subtitle1" className={classes.title}>
+                            {props.location}
+                        </Typography>
                     </IconButton>
+
                     <div className={classes.grow} />
                     <div >
                         <IconButton
@@ -195,12 +208,14 @@ const PrimarySearchAppBar=(props)=> {
 }
 
 const mtsp=(state)=>({
-    searchText: state.search.searchText
+    searchText: state.search.searchText,
+    location: state.navBarReducer.location
 })
 
 const dtsp=(dispatch)=>({
     searchfunction:(text)=> searchActions.findEventsByName(dispatch,text),
-    searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text)
+    searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text),
+    findUserLocation: (location)=> findLocation(dispatch,location)
 })
 
 export default connect(mtsp,dtsp)(PrimarySearchAppBar);

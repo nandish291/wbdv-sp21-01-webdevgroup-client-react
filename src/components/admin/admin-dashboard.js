@@ -1,6 +1,5 @@
-import React, {useEffect,useState} from 'react'
-import {connect} from 'react-redux'
-import {Link, useParams,useHistory} from "react-router-dom";
+import React from 'react'
+import {Link} from "react-router-dom";
 import UserRow from "./user-row";
 import PrimarySearchAppBar from "../utils/navBar";
 
