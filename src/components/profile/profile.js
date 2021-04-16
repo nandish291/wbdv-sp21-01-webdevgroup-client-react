@@ -94,7 +94,7 @@ const Profile = () => {
                                 <div className="card-body">
 
                                         <BasicInfo id={"1"}
-                                                   uid={"1"}
+                                                   uid={"2"}
                                                    fname={"Shaili"}
                                                    lname={"Gandhi"}
                                                    email={"abd@gmail.com"}
