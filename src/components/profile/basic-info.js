@@ -1,8 +1,9 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 
-const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
+const BasicInfo = ({id, uid, fname, lname, email, password, dob, gender}) => {
 
     const [editing, setEditing] = useState(false)
+    const [render, setRender] = useState(false)
     const [newfName, setNewfName] = useState(fname)
     const [newlName, setNewlName] = useState(lname)
     const [newEmail, setNewEmail] = useState(email)
@@ -10,11 +11,65 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
     const [newDOB, setNewDOB] = useState(dob)
     const [newGender, setNewGender] = useState(gender)
 
-    const saveName = () => {
+    const savefName = () => {
         setEditing(false)
     }
 
+    const checkRender = () => {
+        setRender(true)
+    }
+
+    useEffect(() => {
+        if(id != uid){
+            setRender(true)
+        }
+        else {
+            setRender(false)
+        }
+
+    }, [])
+
+
     return(
+        <div>
+        {
+            render &&
+
+            <div class="container-fluid">
+
+                        <div class="row">
+
+                            <div class="col-sm-6">
+
+                                <div>
+                                    First Name
+                                </div>
+
+                                <div>
+                                    {
+                                        <div>
+                                            {newfName}
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+
+                                Last Name
+                                    <div>
+                                        {newlName}
+                                    </div>
+
+                            </div>
+
+                        </div>
+            </div>
+        }
+
+        { !render &&
+
         <div class="container-fluid">
 
             <div class="row">
@@ -29,7 +84,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                         {
                             !editing &&
                             <div>
-                                {fname}
+                                {newfName}
                             </div>
                         }
                     </div>
@@ -55,7 +110,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
                     { !editing &&
                         <div>
-                            {lname}
+                            {newlName}
                         </div>
                     }
 
@@ -84,7 +139,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
                     { !editing &&
                         <div>
-                            {email}
+                            {newEmail}
                         </div>
                     }
 
@@ -109,7 +164,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
                     { !editing &&
                         <div>
-                            {password}
+                            {newPassword}
                         </div>
                     }
 
@@ -138,7 +193,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
                     { !editing &&
                         <div>
-                            {dob}
+                            {newDOB}
                         </div>
                     }
 
@@ -164,7 +219,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
                     { !editing &&
                         <div>
-                            {gender}
+                            {newGender}
                         </div>
                     }
 
@@ -196,22 +251,23 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                 <div className="col-6">
 
 
-                    { editing&&
+                    { editing &&
                     <div>
                         <button className="btn btn-success"
-                                onClick={() => { setNewfName('')
+                                onClick={() => {
+                                    fname = newfName
+                                    lname = newlName
+                                    email = newEmail
+                                    password = newPassword
+                                    dob = newDOB
+                                    gender = newGender
                                     return setEditing(false) }}
                         >Save</button>
-                        &nbsp;
-                        &nbsp;
-                        <button className="btn btn-danger"
-                                onClick={() => { setEditing(false) }}
-                        >Cancel</button>
                     </div>
                     }
                     {!editing&&
                     <button className="btn btn-primary"
-                            onClick={() => { setNewfName('')
+                            onClick={() => {
                                 return setEditing(true) }}
                     >Edit profile</button>
                     }
@@ -219,6 +275,8 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
             </div>
 
+        </div>
+        }
         </div>
     )
 

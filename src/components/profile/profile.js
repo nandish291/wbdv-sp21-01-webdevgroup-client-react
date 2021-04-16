@@ -17,6 +17,16 @@ const Profile = () => {
     const [tab2, setTab2] = useState(false)
     const [tab3, setTab3] = useState(false)
 
+    const user = {
+        id: "1",
+        fname: "Shaili",
+        lname: "Gandhi",
+        email: "abd@gmail.com",
+        password: "123456",
+        dob: "2/23/1992",
+        gender: "female"
+    }
+
     return (
         <>
             <PrimarySearchAppBar/>
@@ -83,7 +93,9 @@ const Profile = () => {
                             { tab1 &&
                                 <div className="card-body">
 
-                                        <BasicInfo fname={"Shaili"}
+                                        <BasicInfo id={"1"}
+                                                   uid={"1"}
+                                                   fname={"Shaili"}
                                                    lname={"Gandhi"}
                                                    email={"abd@gmail.com"}
                                                    password={"123456"}
