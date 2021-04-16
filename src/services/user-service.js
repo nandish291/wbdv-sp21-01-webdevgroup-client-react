@@ -10,10 +10,17 @@ export const createUser = (user) =>
         .then(response => response.json())
 
 
-export const logIn = (username, password) =>
-    fetch(`http://localhost:8080/api/login/${username}/${password}`)
-        .then(response => response.json())
-        // .then(response => console.log(response))
+export const logIn = (user) =>
+        fetch(`http://localhost:8080/api/login`, {
+            method: 'POST',
+            body: JSON.stringify(user),
+            credentials: "include",
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+
 
 
 // export const findUserById = (uid) =>
