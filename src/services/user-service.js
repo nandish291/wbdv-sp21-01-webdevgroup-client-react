@@ -1,5 +1,5 @@
 export const createUser = (user) =>
-    fetch(`http://localhost:8080/api/register/${user.username}`, {
+    fetch(`https://webdev-group-sp2101-server.herokuapp.com/api/register/${user.username}`, {
         method: 'POST',
         body: JSON.stringify(user),
         credentials: "include",
@@ -11,7 +11,7 @@ export const createUser = (user) =>
 
 
 export const logIn = (user) =>
-        fetch(`http://localhost:8080/api/login`, {
+        fetch(`https://webdev-group-sp2101-server.herokuapp.com/api/login`, {
             method: 'POST',
             body: JSON.stringify(user),
             credentials: "include",
