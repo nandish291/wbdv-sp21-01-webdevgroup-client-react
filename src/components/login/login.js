@@ -44,7 +44,7 @@ const LogIn = () => {
                                             } else if (response === -1) {
                                                 alert("This username does not exist.")
                                             } else if (response === 1) {
-                                                history.push("/profile")
+                                                history.push(`/profile/user/${username}`)
                                             }
                                         })
                                     }

@@ -7,8 +7,8 @@ import {Link} from "react-router-dom";
 const Profile = () => {
 
     const user = {
-        firstName: '',
-        lastName: '',
+        firstname: '',
+        lastname: '',
         dob: '',
         gender: '',
         username: '',
@@ -17,6 +17,7 @@ const Profile = () => {
     }
 
     const [state, setState] = useState(user)
+
     useEffect(() => {
         fetch(`http://localhost:8080/currentUser`, {
             method: 'GET',
@@ -26,14 +27,13 @@ const Profile = () => {
         )
     }, [])
 
-
     return (
         <>
             <PrimarySearchAppBar/>
             <div className="container">
                 <br/>
                 <h1>Profile</h1>
-                Hello {state.firstName}
+                Hello {state.firstname}
                 <br/>
                 <div className="row">
 

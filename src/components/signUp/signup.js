@@ -5,8 +5,8 @@ import {createUser} from "../../services/user-service";
 
 const SignUp = () => {
 
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
+    const [firstname, setFirstname] = useState("")
+    const [lastname, setLastname] = useState("")
     const [dob, setDob] = useState("")
     const [gender, setGender] = useState("")
     const [username, setUsername] = useState("")
@@ -14,13 +14,11 @@ const SignUp = () => {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [email, setEmail] = useState("")
 
-    const [currentUser, setCurrentUser] = useState()
-
     const history = useHistory();
 
     const user = {
-        firstName: '',
-        lastName: '',
+        firstname: '',
+        lastname: '',
         dob: '',
         gender: '',
         username: '',
@@ -45,10 +43,10 @@ const SignUp = () => {
                             <input type="text"
                                    className="form-control"
                                    placeholder="First Name"
-                                   value={cachedItem.firstName}
+                                   value={cachedItem.firstname}
                                    onChange={(e) => {
-                                       setFirstName(e.target.value)
-                                       setCachedItem({...cachedItem, firstName: e.target.value})
+                                       setFirstname(e.target.value)
+                                       setCachedItem({...cachedItem, firstname: e.target.value})
                                    }}
                             />
                         </div>
@@ -56,15 +54,15 @@ const SignUp = () => {
                             <input type="text"
                                    className="form-control"
                                    placeholder="Last Name"
-                                   value={cachedItem.lastName}
+                                   value={cachedItem.lastname}
                                    onChange={(e) => {
-                                       setLastName(e.target.value)
-                                       setCachedItem({...cachedItem, lastName: e.target.value})
+                                       setLastname(e.target.value)
+                                       setCachedItem({...cachedItem, lastname: e.target.value})
                                    }}
                             />
                         </div>
                         <div className="form-group mb-3">
-                            <input type="text"
+                            <input type="date"
                                    className="form-control"
                                    placeholder="DOB"
                                    value={cachedItem.dob}
@@ -75,15 +73,29 @@ const SignUp = () => {
                             />
                         </div>
                         <div className="form-group mb-3">
-                            <input type="text"
-                                   className="form-control"
-                                   placeholder="Gender"
-                                   value={cachedItem.gender}
-                                   onChange={(e) => {
-                                       setGender(e.target.value)
-                                       setCachedItem({...cachedItem, gender: e.target.value})
-                                   }}
-                            />
+
+                            <select value={cachedItem.gender}
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        setGender(e.target.value)
+                                        setCachedItem({...cachedItem, gender: e.target.value})
+                                    }}
+                            >
+                                <option value={"Select gender:"}>Select gender:</option>
+                                <option value={"Female"}>Female</option>
+                                <option value={"Male"}>Male</option>
+                                <option value={"No answer"}>No answer</option>
+                            </select>
+
+                            {/*<input type="text"*/}
+                            {/*       placeholder="Gender"*/}
+                            {/*       className="form-control"*/}
+                            {/*       value={cachedItem.gender}*/}
+                            {/*       onChange={(e) => {*/}
+                            {/*           setGender(e.target.value)*/}
+                            {/*           setCachedItem({...cachedItem, gender: e.target.value})*/}
+                            {/*       }}*/}
+                            {/*/>*/}
                         </div>
                         <div className="form-group mb-3">
                             <input type="text"
@@ -114,7 +126,6 @@ const SignUp = () => {
                                    value={cachedItem.confirmPassword}
                                    onChange={(e) => {
                                        setConfirmPassword(e.target.value)
-                                       setCachedItem({...cachedItem, confirmPassword: e.target.value})
                                    }}
                             />
                         </div>
@@ -126,7 +137,6 @@ const SignUp = () => {
                                    onChange={(e) => {
                                        setEmail(e.target.value)
                                        setCachedItem({...cachedItem, email: e.target.value})
-                                       console.log(cachedItem.email)
                                    }}
 
                             />
@@ -135,9 +145,9 @@ const SignUp = () => {
                             <button className="btn btn-primary"
                                     onClick={() => {
 
-                                        if (firstName.length === 0) {
+                                        if (firstname.length === 0) {
                                             alert("Please enter your first name.")
-                                        } else if (lastName.length === 0) {
+                                        } else if (lastname.length === 0) {
                                             alert("Please enter your last name.")
                                         } else if (dob.length === 0) {
                                             alert("Please enter your date of birth.")
@@ -155,8 +165,8 @@ const SignUp = () => {
                                             alert("Please provide an email.")
                                         } else {
 
-                                            user.firstName = firstName
-                                            user.lastName = lastName
+                                            user.firstname = firstname
+                                            user.lastname = lastname
                                             user.dob = dob
                                             user.gender = gender
                                             user.username = username

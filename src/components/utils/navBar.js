@@ -11,10 +11,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import RoomIcon from '@material-ui/icons/Room';
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import searchActions from "../../actions/search-actions";
 import {findLocation} from "../../actions/navBar-actions";
+import {logOut} from "../../services/user-service";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -81,13 +82,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PrimarySearchAppBar=(props)=> {
+
     const[search,setSearch]=useState("")
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-
     const isMenuOpen = Boolean(anchorEl);
 
     const handleProfileMenuOpen = (event) => {
+
         setAnchorEl(event.currentTarget);
     };
 
@@ -103,6 +105,7 @@ const PrimarySearchAppBar=(props)=> {
         setAnchorEl(null);
     };
 
+    const history = useHistory()
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -124,6 +127,15 @@ const PrimarySearchAppBar=(props)=> {
                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
            </Link>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+           <Link style={{textDecoration:'none',color:'black'}}>
+               <MenuItem onClick={() => {
+                   logOut()
+                   history.push("/")
+               }}
+               >
+                   Log Out
+               </MenuItem>
+           </Link>
         </Menu>
     );
 
