@@ -10,6 +10,7 @@ import event2 from '../imgs/event2.jpg'
 import event3 from '../imgs/event3.jpg'
 import media1 from '../imgs/media1.jpg'
 import media2 from '../imgs/media2.jpg'
+import {findUserById} from "../../services/profile-service";
 
 const Profile = () => {
 
