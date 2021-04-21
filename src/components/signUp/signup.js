@@ -179,7 +179,6 @@ const SignUp = () => {
                                                     if (response === -1) {
                                                         alert("Username already exists.")
                                                     } else {
-                                                        console.log(response)
                                                         history.push("/api/login")
                                                     }
                                                 })

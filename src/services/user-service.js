@@ -1,9 +1,14 @@
-const createUser = (user) =>
+export const createUser = (user) =>
     // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/register/${user.username}`, {
-    fetch(`http://localhost:8080/api/register/${user.username}`, {
+    fetch(`http://localhost:8080/api/register`, {
         method: 'POST',
         body: JSON.stringify(user),
         credentials: "include",
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+        .then(response => response.json())
 const EVENT_URL = "https://webdev-group-sp2101-server.herokuapp.com";
 
 const findUserById = (uid) =>
@@ -38,7 +43,7 @@ const addEventToInterestedForUser = (uid, event) =>
         .then(response => response.json())
 
 
- const logIn = (user) =>
+export const logIn = (user) =>
         // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/login`, {
         fetch(`http://localhost:8080/api/login`, {
             method: 'POST',
@@ -48,9 +53,10 @@ const addEventToInterestedForUser = (uid, event) =>
                 'content-type': 'application/json'
             }
         })
-            .then(response => response.json())
+            .then((response) => response.json()
+            )
 
- const logOut = () =>
+ export const logOut = () =>
         // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/logout`, {
         fetch(`http://localhost:8080/api/logout`, {
             method: 'POST',
@@ -72,6 +78,13 @@ const addEventToInterestedForUser = (uid, event) =>
     })
         .then(response => response.json())
 
+const checkLoggedIn=()=>
+    fetch(`http://localhost:8080/currentUser`, {
+        method: 'GET',
+        credentials: "include"
+    }).then(response => response.json())
+
+
 const api = {
     findUserById,
     addEventToInterestedForUser,
@@ -80,7 +93,8 @@ const api = {
     deleteEventFromAttendingForUser,
     createUser,
     logIn,
-    logOut
+    logOut,
+    checkLoggedIn
 };
 
 export default api;

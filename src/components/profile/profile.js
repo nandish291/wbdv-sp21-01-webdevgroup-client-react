@@ -18,15 +18,6 @@ const Profile = () => {
 
     const [state, setState] = useState(user)
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/currentUser`, {
-            method: 'GET',
-            credentials: "include"
-        }).then(response => response.json())
-            .then(currentUser => setState(currentUser)
-        )
-    }, [])
-
     return (
         <>
             <PrimarySearchAppBar/>

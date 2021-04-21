@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +16,7 @@ import {connect} from "react-redux";
 import searchActions from "../../actions/search-actions";
 import {findLocation} from "../../actions/navBar-actions";
 import {logOut} from "../../services/user-service";
+import userActions from "../../actions/user-actions"
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -82,6 +83,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PrimarySearchAppBar=(props)=> {
+    const sessionCheck=()=>{
+        if(!props.session.user.userLoggedin)
+            props.checkLogin()
+    }
+
+    useEffect(()=>
+        sessionCheck(),[props.session.user.userLoggedin]
+    )
 
     const[search,setSearch]=useState("")
     const classes = useStyles();
@@ -221,13 +230,15 @@ const PrimarySearchAppBar=(props)=> {
 
 const mtsp=(state)=>({
     searchText: state.search.searchText,
-    location: state.navBarReducer.location
+    location: state.navBarReducer.location,
+    session: state.sessionReducer
 })
 
 const dtsp=(dispatch)=>({
     searchfunction:(text)=> searchActions.findEventsByName(dispatch,text),
     searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text),
-    findUserLocation: (location)=> findLocation(dispatch,location)
+    findUserLocation: (location)=> findLocation(dispatch,location),
+    checkLogin:()=> userActions.checkLogin(dispatch)
 })
 
 export default connect(mtsp,dtsp)(PrimarySearchAppBar);

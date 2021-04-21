@@ -18,16 +18,13 @@ const useStyles = makeStyles((theme) => ({
 const Recommendations=(props)=>{
     const classes = useStyles();
     useEffect(()=> {
-        console.log('use effect recommendation')
         recommendations()
     },[props.location])
     const recommendations=()=>{
         if(props.location.length>1) {
-            console.log('location if')
             props.findRecommendedOnLocation(props.location);
         }
         else {
-            console.log('location else')
             props.findRecommended()
         }
     }
