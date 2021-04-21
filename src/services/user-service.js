@@ -1,6 +1,8 @@
+const BASEURL="https://webdev-group-sp2101-server.herokuapp.com"
+
 export const createUser = (user) =>
     // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/register/${user.username}`, {
-    fetch(`http://localhost:8080/api/register`, {
+    fetch(`${BASEURL}/api/register`, {
         method: 'POST',
         body: JSON.stringify(user),
         credentials: "include",
@@ -9,14 +11,13 @@ export const createUser = (user) =>
         }
     })
         .then(response => response.json())
-const EVENT_URL = "https://webdev-group-sp2101-server.herokuapp.com";
 
 const findUserById = (uid) =>
-    fetch(`${EVENT_URL}/user/${uid}`)
+    fetch(`${BASEURL}/user/${uid}`)
         .then(response => response.json())
 
 const addEventToInterestedForUser = (uid, event) =>
-    fetch(`${EVENT_URL}/user/${uid}/add_interested_event`, {
+    fetch(`${BASEURL}/user/${uid}/add_interested_event`, {
         method: "PUT",
         body: JSON.stringify(event),
         headers: {
@@ -26,14 +27,14 @@ const addEventToInterestedForUser = (uid, event) =>
         .then(response => response.json())
 
  const deleteEventFromInterestedForUser = (uid,eid) =>
-    fetch(`${EVENT_URL}/user/${uid}/delete_interested_event/${eid}`, {
+    fetch(`${BASEURL}/user/${uid}/delete_interested_event/${eid}`, {
         method: "DELETE"
     })
         .then(response => response.json())
 
 
  const addEventToAttendingForUser = (uid, event) =>
-    fetch(`${EVENT_URL}/user/${uid}/add_attended_event`, {
+    fetch(`${BASEURL}/user/${uid}/add_attended_event`, {
         method: "PUT",
         body: JSON.stringify(event),
         headers: {
@@ -45,7 +46,7 @@ const addEventToInterestedForUser = (uid, event) =>
 
 export const logIn = (user) =>
         // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/login`, {
-        fetch(`http://localhost:8080/api/login`, {
+        fetch(`${BASEURL}/api/login`, {
             method: 'POST',
             body: JSON.stringify(user),
             credentials: "include",
@@ -58,7 +59,7 @@ export const logIn = (user) =>
 
  export const logOut = () =>
         // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/logout`, {
-        fetch(`http://localhost:8080/api/logout`, {
+        fetch(`${BASEURL}/api/logout`, {
             method: 'POST',
             credentials: "include",
             // headers: {
@@ -73,13 +74,13 @@ export const logIn = (user) =>
 //     fetch(`http://localhost:8080/api/profile/${uid}`)
 //         .then(response => response.json())
  const deleteEventFromAttendingForUser = (uid,eid) =>
-    fetch(`${EVENT_URL}/user/${uid}/delete_attended_event/${eid}`, {
+    fetch(`${BASEURL}/user/${uid}/delete_attended_event/${eid}`, {
         method: "DELETE"
     })
         .then(response => response.json())
 
 const checkLoggedIn=()=>
-    fetch(`http://localhost:8080/currentUser`, {
+    fetch(`${BASEURL}/currentUser`, {
         method: 'GET',
         credentials: "include"
     }).then(response => response.json())
