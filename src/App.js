@@ -9,19 +9,30 @@ import Profile from './components/profile/profile'
 import SearchResults from "./components/searchResults";
 
 function App() {
-  return (
-      <>
-        <BrowserRouter>
-          <Route path="/" exact={true} component={home}/>
-          <Route path="/event/:eventId" exact={true} component={EventDetails}/>
-          <Route path="/admin"  component={AdminDashBoard}/>
-          <Route path="/search" component={SearchResults}/>
-          <Route path="/login" exact={true} component={LogIn}/>
-          <Route path="/signup" exact={true} component={SignUp}/>
-          <Route path="/profile" exact={true} component={Profile}/>
-        </BrowserRouter>
-      </>
-  );
+
+    return (
+        <>
+            <BrowserRouter>
+                <Route path={[
+                    "/",
+                    "/user/:username"
+                ]}
+                       exact={true}
+                       component={home}/>
+                <Route path="/event/:eventId" exact={true} component={EventDetails}/>
+                <Route path="/admin" component={AdminDashBoard}/>
+                <Route path="/search" component={SearchResults}/>
+                <Route path="/api/login" exact={true} component={LogIn}/>
+                <Route path="/signup" exact={true} component={SignUp}/>
+                <Route path={[
+                    "/profile",
+                    "/profile/user/:username"
+                ]}
+                       exact={true}
+                       component={Profile}/>
+            </BrowserRouter>
+        </>
+    );
 }
 
 export default App;

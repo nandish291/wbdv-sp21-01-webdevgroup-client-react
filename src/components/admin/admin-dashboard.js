@@ -71,37 +71,6 @@ const AdminDashBoard = (
 
 }
 
-// const stpm = (state) => {
-//     return {
-//         events: state.eventReducer.events,
-//     }
-// }
-// const dtpm = (dispatch) => {
-//     return {
-//         getAllEvents: () => {
-//             eventService.getAllEvents()
-//                 .then(events => {
-//                     console.log(events["events"]);
-//                     dispatch({
-//                         type: "GET_ALL_EVENTS",
-//                         events: events["events"]
-//                     })
-//                 })
-//         },
-//         getAllEventsByName: (name) => {
-//             eventService.getAllEventsByName(name)
-//                 .then(events => {
-//                     console.log(events["events"]);
-//                     dispatch({
-//                         type: "GET_ALL_EVENTS_BY_NAME",
-//                         events: events["events"]
-//                     })
-//                 })
-//         }
-//     }
-// }
 
-// export default connect(stpm, dtpm)
-// (EventTable)
 
 export default AdminDashBoard

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './profile-style.css'
 import BasicInfo from './basic-info.js'
 import PrimarySearchAppBar from "../utils/navBar";
@@ -6,12 +6,25 @@ import {Link} from "react-router-dom";
 
 const Profile = () => {
 
+    const user = {
+        firstname: '',
+        lastname: '',
+        dob: '',
+        gender: '',
+        username: '',
+        password: '',
+        email: ''
+    }
+
+    const [state, setState] = useState(user)
+
     return (
         <>
             <PrimarySearchAppBar/>
             <div className="container">
                 <br/>
                 <h1>Profile</h1>
+                Hello {state.firstname}
                 <br/>
                 <div className="row">
 

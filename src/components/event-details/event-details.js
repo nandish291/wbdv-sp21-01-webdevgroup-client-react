@@ -64,8 +64,6 @@ const EventDetails = (
         findCommentsByEvent(eventId)
     }, [])
 
-    console.log("events: ",event)
-
     return (<>
         <PrimarySearchAppBar/>
         <div className="container">
@@ -284,7 +282,6 @@ const dtpm = (dispatch) => {
         findEventById: (eid) => {
             eventService.findEventById(eid)
                 .then(eventdetails => {
-                    console.log(eventdetails);
                     dispatch({
                         type: "FIND_EVENT_BY_ID",
                         event: eventdetails.event
@@ -294,7 +291,6 @@ const dtpm = (dispatch) => {
         findUserById: (uid) =>{
             userService.findUserById(uid)
                 .then(u => {
-                    console.log(u);
                     dispatch({
                         type: "FIND_USER_BY_ID",
                         user: u

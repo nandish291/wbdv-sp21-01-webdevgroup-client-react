@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,10 +11,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import RoomIcon from '@material-ui/icons/Room';
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import searchActions from "../../actions/search-actions";
 import {findLocation} from "../../actions/navBar-actions";
+import {logOut} from "../../services/user-service";
+import userActions from "../../actions/user-actions"
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -81,13 +83,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PrimarySearchAppBar=(props)=> {
+    const sessionCheck=()=>{
+        if(!props.session.user.userLoggedin)
+            props.checkLogin()
+    }
+
+    useEffect(()=>
+        sessionCheck(),[props.session.user.userLoggedin]
+    )
+
     const[search,setSearch]=useState("")
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-
     const isMenuOpen = Boolean(anchorEl);
 
     const handleProfileMenuOpen = (event) => {
+
         setAnchorEl(event.currentTarget);
     };
 
@@ -103,6 +114,7 @@ const PrimarySearchAppBar=(props)=> {
         setAnchorEl(null);
     };
 
+    const history = useHistory()
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -115,8 +127,24 @@ const PrimarySearchAppBar=(props)=> {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-           <Link style={{textDecoration:'none',color:'black'}} to="/profile"> <MenuItem onClick={handleMenuClose}>Profile</MenuItem></Link>
+           <Link style={{textDecoration:'none',color:'black'}}
+                 to="/api/login">
+               <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
+           </Link>
+           <Link style={{textDecoration:'none',color:'black'}}
+                 to="/profile">
+               <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+           </Link>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+           <Link style={{textDecoration:'none',color:'black'}}>
+               <MenuItem onClick={() => {
+                   logOut()
+                   history.push("/")
+               }}
+               >
+                   Log Out
+               </MenuItem>
+           </Link>
         </Menu>
     );
 
@@ -202,13 +230,15 @@ const PrimarySearchAppBar=(props)=> {
 
 const mtsp=(state)=>({
     searchText: state.search.searchText,
-    location: state.navBarReducer.location
+    location: state.navBarReducer.location,
+    session: state.sessionReducer
 })
 
 const dtsp=(dispatch)=>({
     searchfunction:(text)=> searchActions.findEventsByName(dispatch,text),
     searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text),
-    findUserLocation: (location)=> findLocation(dispatch,location)
+    findUserLocation: (location)=> findLocation(dispatch,location),
+    checkLogin:()=> userActions.checkLogin(dispatch)
 })
 
 export default connect(mtsp,dtsp)(PrimarySearchAppBar);

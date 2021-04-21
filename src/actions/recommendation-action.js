@@ -12,7 +12,6 @@ const findRecommended=(dispatch)=>{
 }
 
 const findRecommendedonLocation=(dispatch,location)=>{
-    console.log("location events called")
     getRecommendedEventsOnLocation(location)
         .then(events=>dispatch({
             type:FIND_RECOMMENDED_EVENTS_ON_LOCATION,
