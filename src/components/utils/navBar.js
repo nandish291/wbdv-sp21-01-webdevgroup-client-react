@@ -128,7 +128,7 @@ const PrimarySearchAppBar=(props)=> {
             onClose={handleMenuClose}
         >
            <Link style={{textDecoration:'none',color:'black'}}
-                 to="/api/login">
+                 to="/login">
                <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
            </Link>
            <Link style={{textDecoration:'none',color:'black'}}
