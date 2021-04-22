@@ -1,11 +1,9 @@
-const BASEURL="https://webdev-group-sp2101-server.herokuapp.com"
+const BASEURL="http://localhost:8080"
 
 export const createUser = (user) =>
-    // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/register/${user.username}`, {
     fetch(`${BASEURL}/api/register`, {
         method: 'POST',
         body: JSON.stringify(user),
-        credentials: "include",
         headers: {
             'content-type': 'application/json'
         }
@@ -56,7 +54,6 @@ export const updateUser = (uid, user) =>
 
 
 export const logIn = (user) =>
-        // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/login`, {
         fetch(`${BASEURL}/api/login`, {
             method: 'POST',
             body: JSON.stringify(user),
@@ -69,21 +66,14 @@ export const logIn = (user) =>
             )
 
  export const logOut = () =>
-        // fetch(`http://webdev-group-sp2101-server.herokuapp.com/api/logout`, {
         fetch(`${BASEURL}/api/logout`, {
             method: 'POST',
             credentials: "include",
-            // headers: {
-            //     'content-type': 'application/json'
-            // }
         })
             .then(response => response.json())
 
 
 
-// export const findUserById = (uid) =>
-//     fetch(`http://localhost:8080/api/profile/${uid}`)
-//         .then(response => response.json())
  const deleteEventFromAttendingForUser = (uid,eid) =>
     fetch(`${BASEURL}/user/${uid}/delete_attended_event/${eid}`, {
         method: "DELETE"
