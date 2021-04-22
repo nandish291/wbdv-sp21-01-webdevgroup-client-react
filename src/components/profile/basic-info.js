@@ -1,20 +1,20 @@
 import {React, useState} from 'react';
 
-const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
+const BasicInfo = ({user,updateUser}) => {
 
+    const [cachedItem, setCahedItem] = useState(user)
     const [editing, setEditing] = useState(false)
-    const [newName, setNewName] = useState(fname)
 
     const saveName = () => {
         setEditing(false)
     }
 
     return(
-        <div class="container-fluid">
+        <div className="container-fluid">
 
-            <div class="row">
+            <div className="row">
 
-                <div class="col-sm-6">
+                <div className="col-sm-6">
 
                     <div>
                         First Name
@@ -24,7 +24,7 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                         {
                             !editing &&
                             <div>
-                                {fname}
+                                {user.firstName}
                             </div>
                         }
                     </div>
@@ -34,9 +34,12 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                             editing &&
                             <div>
                                 <input
-                                    onChange={(event) => setNewName(event.target.value)}
-                                    value={newName}
-                                    placeholder={fname}
+                                    onChange={(e) =>
+                                        setCahedItem({
+                                            ...cachedItem,
+                                            firstName: e.target.value
+                                        })}
+                                    value={cachedItem.firstName}
                                     className="form-control"/>
                             </div>
                         }
@@ -44,55 +47,127 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
 
                 </div>
 
-                <div class="col-sm-6">
+                <div className="col-sm-6">
 
                     Last Name
                     <div>
-                        {lname}
+                        {
+                            !editing &&
+                            user.lastName
+                        }
+                    </div>
+
+                    <div>
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(e) =>
+                                        setCahedItem({
+                                            ...cachedItem,
+                                            lastName: e.target.value
+                                        })}
+                                    value={cachedItem.lastName}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
 
             </div>
 
-            <div class="row mt-3">
+            <div className="row mt-3">
 
-                <div class="col-sm-6">
+                <div className="col-sm-6">
 
-                    Email
+                    Username
+
                     <div>
-                        {email}
+                        {
+                            !editing &&
+                            user.userName
+                        }
+                    </div>
+
+                    <div>
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(e) =>
+                                    setCahedItem({
+                                        ...cachedItem,
+                                        userName: e.target.value
+                                    })}
+                                    value={cachedItem.userName}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
 
-                <div class="col-sm-6">
+                <div className="col-sm-6">
 
                     Password
+                    {/*<div>*/}
+                    {/*    {user.password}*/}
+                    {/*</div>*/}
+
+                    {/*<div>*/}
+                    {/*    {*/}
+                    {/*        !editing &&*/}
+                    {/*        user.userName*/}
+                    {/*    }*/}
+                    {/*</div>*/}
+
                     <div>
-                        {password}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(e) =>
+                                        setCahedItem({
+                                            ...cachedItem,
+                                            password: e.target.value
+                                        })}
+                                    value={cachedItem.password}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
 
             </div>
 
-            <div class="row mt-3">
+            <div className="row mt-3">
 
-                <div class="col-sm-6">
+                <div className="col-sm-6">
 
                     Date of Birth
                     <div>
-                        {dob}
+                        {
+                            !editing &&
+                            user.dob
+                        }
                     </div>
 
-                </div>
-
-                <div class="col-sm-6">
-
-                    Gender
                     <div>
-                        {gender}
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(e) =>
+                                        setCahedItem({
+                                            ...cachedItem,
+                                            dob: e.target.value
+                                        })}
+                                    value={cachedItem.dob}
+                                    className="form-control"/>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -113,8 +188,11 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                     { editing&&
                     <div>
                         <button className="btn btn-success"
-                                onClick={() => { setNewName('')
-                                    return setEditing(false) }}
+                                onClick={()=>{
+                                    updateUser(cachedItem.id,cachedItem)
+                                    setEditing(false)
+                                }
+                                }
                         >Save</button>
                         &nbsp;
                         &nbsp;
@@ -123,10 +201,10 @@ const BasicInfo = ({fname, lname, email, password, dob, gender}) => {
                         >Cancel</button>
                     </div>
                     }
-                    {!editing&&
+                    {
+                        !editing&&
                     <button className="btn btn-primary"
-                            onClick={() => { setNewName('')
-                                return setEditing(true) }}
+                            onClick={() => { setEditing(true) }}
                     >Edit profile</button>
                     }
                 </div>
