@@ -53,7 +53,8 @@ const EventDetails = (
 
     const [cachedItem, setCahedItem] = useState('')
     Moment.locale('en');
-    var dt = event.datetime_local;
+
+    var dt = (event)?event.datetime_local:null;
 
     const {eventId} = useParams()
 
@@ -77,14 +78,17 @@ const EventDetails = (
 
                     {<div className="card h-100">
                         <div className="card-body">
-                            <h5 className="card-title">Event Name : <b>{event.title}</b></h5>
-                            <p className="card-text">Event: {event.id} This is a great concert which usually involves 1000+ attendees.
+                            <h5 className="card-title">Event Name : <b>{
+                                event &&
+                                event.title}</b></h5>
+                            <p className="card-text">This is a great concert which usually involves 1000+ attendees.
                                 Every year they perform at this festival just for the fans.</p>
                         </div>
                         {
                             event &&
                             <ul className="list-group list-group-flush">
                             <li className="list-group-item">Artist: {
+                                event &&
                                 event.performers &&
                                 event.performers.map(p => <b>{p.name}; </b>)
 
@@ -92,6 +96,7 @@ const EventDetails = (
                             </li>
                             <li className="list-group-item">Venue: <b>
                                 {
+                                    event &&
                                     event.venue &&
                                     event.venue.name
 
@@ -99,7 +104,9 @@ const EventDetails = (
                             </b>
                             </li>
                                 {/*{Moment(dt).format('MM-DD-YYYY')}*/}
-                            <li className="list-group-item">Date: <b>{event.datetime_utc}</b></li>
+                            <li className="list-group-item">Date: <b>{
+                                event &&
+                                event.datetime_utc}</b></li>
                             {/*<li className="list-group-item">Time: <b>{Moment(dt).format('HH:mm')}</b></li>*/}
                             </ul>
                         }
@@ -112,6 +119,7 @@ const EventDetails = (
 
                     <div className="card h-100">
                         <img src={
+                            event &&
                             event.performers &&
                             event.performers[0].image
                         }
@@ -186,9 +194,6 @@ const EventDetails = (
                                 <li className="nav-item">
                                     <Link className="nav-link active" to="#">Comments</Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="#">Photos</Link>
-                                </li>
                             </ul>
                         </div>
                         <div className="card-body">
@@ -199,7 +204,7 @@ const EventDetails = (
                                         <div className="d-flex flex-row add-comment-section mt-4 mb-4">
                                             <img
                                                 className="img-fluid img-responsive rounded-circle mr-2"
-                                                src="https://i.imgur.com/qdiP4DB.jpg" width="38"/> &nbsp;
+                                                src="https://st.depositphotos.com/2218212/2938/i/950/depositphotos_29387653-stock-photo-facebook-profile.jpg" width="38"/> &nbsp;
                                             <input type="text"
                                                    className="form-control mr-3"
                                                    placeholder="Add comment"
@@ -229,7 +234,8 @@ const EventDetails = (
 
                                                 <div className="commented-section mt-2">
                                                     <div className="d-flex flex-row align-items-center commented-user">
-                                                        <h5 className="mr-2">{comment.userName}</h5>
+                                                        <Link to={`/profile/${comment.user.id}`}
+                                                        ><h5 className="mr-2">{comment.userName}</h5></Link>
                                                     </div>
                                                     <div className="comment-text-sm">
                                                         <span>{comment.comment}</span>

@@ -26,6 +26,17 @@ const addEventToInterestedForUser = (uid, event) =>
     })
         .then(response => response.json())
 
+
+export const updateUser = (uid, user) =>
+    fetch(`${BASEURL}/user/${uid}/update`, {
+        method: "PUT",
+        body: JSON.stringify(user),
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+
  const deleteEventFromInterestedForUser = (uid,eid) =>
     fetch(`${BASEURL}/user/${uid}/delete_interested_event/${eid}`, {
         method: "DELETE"
@@ -92,6 +103,7 @@ const api = {
     deleteEventFromInterestedForUser,
     addEventToAttendingForUser,
     deleteEventFromAttendingForUser,
+    updateUser,
     createUser,
     logIn,
     logOut,
