@@ -10,3 +10,13 @@ export const getRecommendedEventsOnLocation=(location)=>{
         .then(response=> response.json()));
 }
 
+export const getRecommendedByPerformer=(id)=>{
+    return(fetch(`${BASE_URL}/recommendations/performer/${id}`))
+        .then(response=>response.json())
+}
+
+export const getRecommendedByEvent=(id)=>{
+    return(fetch(`${BASE_URL}/recommendations/event/${id}`))
+        .then(response=>response.json())
+}
+

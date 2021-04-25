@@ -8,39 +8,45 @@ import userService from "../../services/user-service";
 import commentService from "../../services/comment-service";
 import {connect} from "react-redux";
 import Event from "./event";
+import {Typography} from "@material-ui/core";
 
 const Profile = (
     {
         user,
         findUserById,
-        updateUser
+        updateUser,
+        session
     }
 ) => {
 
     const {uid} = useParams();
     const [isInfoTab, setIsInfoTab] = useState(true)
+    const [anonymous,setAnonymous]=useState(true)
 
     useEffect(() => {
-        // alert(courseId)
-        if(uid === undefined)
-        {
-            findUserById(1)
-        }else{
+        if(uid)
             findUserById(uid)
+        else if(session.userLoggedin) {
+            findUserById(session.user.id)
+            setAnonymous(false)
+        }
+        if(uid==session.user.id)
+        {
+            setAnonymous(false)
         }
 
-    }, [])
+    }, [session.userLoggedin])
 
     return (
         <>
             <PrimarySearchAppBar/>
-            <div className="container">
+            <div className='container' style={{marginBottom:'2em'}} >
                 <br/>
                 <h1>Profile</h1>
                 <br/>
                 <div className="row">
 
-                    <div className="card col-3">
+                    <div className="card col-sm-3">
                         <br/>
 
 
@@ -52,13 +58,11 @@ const Profile = (
 
                         <div className="card-body">
                             <h5 className="card-title text-center">{user.firstName} {user.lastName}</h5>
-                            <p className="card-text text-center">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
                         </div>
 
                     </div>
 
-                    <div className="col-9">
+                    <div className="col-sm">
 
                         <div className="card">
                             <div className="card-header">
@@ -67,17 +71,24 @@ const Profile = (
                                         <Link className={`nav-link ${isInfoTab ? 'active' : ''}`}  aria-current="true" to="#"
                                         onClick={()=>setIsInfoTab(true)}>Basic Info</Link>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item">{
                                         <Link className={`nav-link ${isInfoTab ? '' : 'active'}`} to="#"
-                                              onClick={()=>setIsInfoTab(false)}
-                                        >My Events</Link>
+                                              onClick={() => setIsInfoTab(false)}
+                                        >{
+                                            !anonymous &&
+                                            <Typography>My Events</Typography>}
+                                            {
+                                                anonymous &&
+                                                <Typography>Events</Typography>
+                                            }
+                                        </Link>}
                                     </li>
                                 </ul>
                             </div>
                             <div className="card-body">
                                 {
                                     isInfoTab &&
-                                    <BasicInfo user={user} updateUser={updateUser}/>
+                                    <BasicInfo user={user} updateUser={updateUser} anonymous={anonymous}/>
                                 }
                                 {
                                     !isInfoTab&&
@@ -85,20 +96,6 @@ const Profile = (
                                 }
                             </div>
                         </div>
-
-                        {/*<div className="row mt-3">*/}
-
-
-
-                        {/*{*/}
-                        {/*    /**/}
-                        {/*    <Media pictures = {media} />*/}
-                        {/*    <Event events = {events} />*/}
-                        {/*    */}
-                        {/*}*/}
-
-                        {/*</div>*/}
-
                     </div>
 
                 </div>
@@ -115,6 +112,7 @@ const Profile = (
 const stpm = (state) => {
     return {
         user: state.userReducer.user,
+        session: state.sessionReducer
     }
 }
 const dtpm = (dispatch) => {

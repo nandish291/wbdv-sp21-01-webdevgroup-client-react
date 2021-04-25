@@ -1,14 +1,22 @@
-const BASEURL="http://localhost:8080"
+const BASEURL="https://webdev-group-sp2101-server.herokuapp.com"
 
-export const createUser = (user) =>
-    fetch(`${BASEURL}/api/register`, {
+const createUser = (user) =>
+    fetch(`${BASEURL}/register`, {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {
             'content-type': 'application/json'
         }
     })
-        .then(response => response.json())
+        .then(response => response.status)
+
+const checkUserNameService=(userName) =>
+    fetch(`${BASEURL}/username/${userName}`)
+        .then(response=> response.status)
+
+const checkEmailService=(email) =>
+    fetch(`${BASEURL}/email/${email}`)
+        .then(response=> response.status)
 
 const findUserById = (uid) =>
     fetch(`${BASEURL}/user/${uid}`)
@@ -54,7 +62,7 @@ export const updateUser = (uid, user) =>
 
 
 export const logIn = (user) =>
-        fetch(`${BASEURL}/api/login`, {
+        fetch(`${BASEURL}/login`, {
             method: 'POST',
             body: JSON.stringify(user),
             credentials: "include",
@@ -66,11 +74,11 @@ export const logIn = (user) =>
             )
 
  export const logOut = () =>
-        fetch(`${BASEURL}/api/logout`, {
+        fetch(`${BASEURL}/logout`, {
             method: 'POST',
             credentials: "include",
         })
-            .then(response => response.json())
+            .then(response => response.status)
 
 
 
@@ -81,10 +89,24 @@ export const logIn = (user) =>
         .then(response => response.json())
 
 const checkLoggedIn=()=>
-    fetch(`${BASEURL}/currentUser`, {
+    fetch(`${BASEURL}/currentuser`, {
         method: 'GET',
         credentials: "include"
     }).then(response => response.json())
+
+const findEventsForUser=(id)=>
+    fetch(`${BASEURL}/user/events/${id}`)
+        .then(response=>response.json())
+
+const findAllUsers=()=>
+    fetch(`${BASEURL}/users`)
+        .then(response=>response.json())
+
+const deleteUser=(userId)=>
+    fetch(`${BASEURL}/user/${userId}`,{
+        method: 'DELETE'
+    })
+        .then(response=>response.json())
 
 
 const api = {
@@ -97,7 +119,12 @@ const api = {
     createUser,
     logIn,
     logOut,
-    checkLoggedIn
+    checkLoggedIn,
+    checkUserNameService,
+    checkEmailService,
+    findEventsForUser,
+    findAllUsers,
+    deleteUser
 };
 
 export default api;

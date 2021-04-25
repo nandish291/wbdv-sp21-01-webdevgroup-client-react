@@ -1,6 +1,7 @@
 import {React, useState} from 'react';
+import {Typography} from "@material-ui/core";
 
-const BasicInfo = ({user,updateUser}) => {
+const BasicInfo = ({user,updateUser,anonymous}) => {
 
     const [cachedItem, setCahedItem] = useState(user)
     const [editing, setEditing] = useState(false)
@@ -14,10 +15,10 @@ const BasicInfo = ({user,updateUser}) => {
 
             <div className="row">
 
-                <div className="col-sm-6">
+                <div className="col-sm">
 
                     <div>
-                        First Name
+                        <Typography>First Name</Typography>
                     </div>
 
                     <div>
@@ -49,7 +50,7 @@ const BasicInfo = ({user,updateUser}) => {
 
                 <div className="col-sm-6">
 
-                    Last Name
+                    <Typography> Last Name</Typography>
                     <div>
                         {
                             !editing &&
@@ -81,7 +82,7 @@ const BasicInfo = ({user,updateUser}) => {
 
                 <div className="col-sm-6">
 
-                    Username
+                    <Typography> Username</Typography>
 
                     <div>
                         {
@@ -94,7 +95,7 @@ const BasicInfo = ({user,updateUser}) => {
                         {
                             editing &&
                             <div>
-                                <input
+                                <input disabled={true}
                                     onChange={(e) =>
                                     setCahedItem({
                                         ...cachedItem,
@@ -110,18 +111,39 @@ const BasicInfo = ({user,updateUser}) => {
 
                 <div className="col-sm-6">
 
-                    Password
-                    {/*<div>*/}
-                    {/*    {user.password}*/}
-                    {/*</div>*/}
+                    <Typography> Email</Typography>
 
-                    {/*<div>*/}
-                    {/*    {*/}
-                    {/*        !editing &&*/}
-                    {/*        user.userName*/}
-                    {/*    }*/}
-                    {/*</div>*/}
+                    <div>
+                        {
+                            !editing &&
+                            user.email
+                        }
+                    </div>
 
+                    <div>
+                        {
+                            editing &&
+                            <div>
+                                <input
+                                    onChange={(e) =>
+                                        setCahedItem({
+                                            ...cachedItem,
+                                            email: e.target.value
+                                        })}
+                                    value={cachedItem.email}
+                                    className="form-control"/>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+
+                <div className="col-sm-6">
+
+                    {
+                        editing &&
+                        <Typography> Password</Typography>
+                    }
                     <div>
                         {
                             editing &&
@@ -132,7 +154,7 @@ const BasicInfo = ({user,updateUser}) => {
                                             ...cachedItem,
                                             password: e.target.value
                                         })}
-                                    value={cachedItem.password}
+                                    value={cachedItem.password} type='password'
                                     className="form-control"/>
                             </div>
                         }
@@ -142,75 +164,118 @@ const BasicInfo = ({user,updateUser}) => {
 
             </div>
 
-            <div className="row mt-3">
+            {
 
-                <div className="col-sm-6">
+                !anonymous &&
+                <div className="row mt-3">
 
-                    Date of Birth
-                    <div>
-                        {
-                            !editing &&
-                            user.dob
-                        }
-                    </div>
+                    <div className="col-sm-6">
 
-                    <div>
-                        {
-                            editing &&
-                            <div>
-                                <input
-                                    onChange={(e) =>
-                                        setCahedItem({
-                                            ...cachedItem,
-                                            dob: e.target.value
-                                        })}
-                                    value={cachedItem.dob}
-                                    className="form-control"/>
-                            </div>
-                        }
+                        <Typography>Date of Birth</Typography>
+                        <div>
+                            {
+                                !editing &&
+                                user.dob
+                            }
+                        </div>
+
+                        <div>
+                            {
+                                editing &&
+                                <div>
+                                    <input
+                                        onChange={(e) =>
+                                            setCahedItem({
+                                                ...cachedItem,
+                                                dob: e.target.value
+                                            })}
+                                        value={cachedItem.dob}
+                                        className="form-control"/>
+                                </div>
+                            }
+                        </div>
+
                     </div>
 
                 </div>
+            }
+            <div className="col-sm-6">
+
+                <Typography> Gender</Typography>
+
+                <div>
+                    {
+                        !editing &&
+                        user.gender
+                    }
+                </div>
+
+                <div>
+                    {
+                        editing &&
+                        <div>
+                            <select
+                                onChange={(e) =>
+                                    setCahedItem({
+                                        ...cachedItem,
+                                        gender: e.target.value
+                                    })}
+                                value={cachedItem.gender}
+                                className="form-control">
+                                <option value='Male'>Male</option>
+                                <option value='Female'>Female</option>
+                                <option value='Non-Binary'>Non-Binary</option>
+                            </select>
+                        </div>
+                    }
+                </div>
 
             </div>
-
 
             <br/>
-            <div className="row mt-3">
+            {
+                !anonymous &&
+                <div className="row mt-3">
 
-                <div className="col-6">
+                    <div className="col-6">
 
-                </div>
-
-                <div className="col-6">
-
-
-                    { editing&&
-                    <div>
-                        <button className="btn btn-success"
-                                onClick={()=>{
-                                    updateUser(cachedItem.id,cachedItem)
-                                    setEditing(false)
-                                }
-                                }
-                        >Save</button>
-                        &nbsp;
-                        &nbsp;
-                        <button className="btn btn-danger"
-                                onClick={() => { setEditing(false) }}
-                        >Cancel</button>
                     </div>
-                    }
-                    {
-                        !editing&&
-                    <button className="btn btn-primary"
-                            onClick={() => { setEditing(true) }}
-                    >Edit profile</button>
-                    }
+
+                    <div className="col-6">
+
+
+                        {editing &&
+                        <div>
+                            <button className="btn btn-success"
+                                    onClick={() => {
+                                        updateUser(cachedItem.id, cachedItem)
+                                        setEditing(false)
+                                    }
+                                    }
+                            >Save
+                            </button>
+                            &nbsp;
+                            &nbsp;
+                            <button className="btn btn-danger"
+                                    onClick={() => {
+                                        setEditing(false)
+                                    }}
+                            >Cancel
+                            </button>
+                        </div>
+                        }
+                        {
+                            !editing &&
+                            <button className="btn btn-primary"
+                                    onClick={() => {
+                                        setEditing(true)
+                                    }}
+                            >Edit profile</button>
+                        }
+                    </div>
+
                 </div>
-
-            </div>
-
+            }
         </div>
     )
 

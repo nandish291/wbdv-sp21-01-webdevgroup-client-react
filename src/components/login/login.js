@@ -20,29 +20,67 @@ const LogIn = (props) => {
     useEffect(()=>{
         if(props.session.userLoggedin)
             history.push("/profile")},[props.session.userLoggedin])
+
     const classes=useStyles();
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [userNameError,setUserNameError]=useState(false)
+    const [passwordError,setPasswordError]=useState(false)
+    // useEffect(()=>{
+    //     loginUser()
+    // },[userNameError,passwordError])
+    // const loginUser=()=>{
+    //     if(username.length>0 && password.length>0)
+    //
+    // }
 
     return (
         <>
             <PrimarySearchAppBar/>
             <div className="container ">
                 <br/>
-                <h3>Login</h3>
+                <Typography variant="h2">Login</Typography>
+                {
+                    props.signUpStatus===200 &&
+                        <Typography variant='h6' >You are registered successfully, please login to continue</Typography>
+                }
                 <form className={classes.root}>
-                        <TextField error={props.session.invalid} className={classes.textField} variant="outlined" fullWidth label="User Name"
-                                   onChange={(e) => setUsername(e.target.value)}/>
-                        <TextField error={props.session.invalid} className={classes.textField} variant="outlined" fullWidth label="Password"   type="password"
-                                   onChange={(e) => setPassword(e.target.value)}/>
-                        <FormHelperText style={{display:`${props.session.invalid ?'inline-block':'none'}`}} >
+                        <Typography variant={"h5"} color='error' style={{display:`${props.session.invalid ?'inline-block':'none'}`}}>
                             Invalid UserName and Password
-                        </FormHelperText>
-                    <Button className={classes.textField} variant="contained" color="primary" onClick={() => {
-                        props.loginUser({username: username, password: password})
-                    }}>
+                        </Typography>
+                        <TextField error={userNameError} helperText={userNameError?"Username cannot be empty":""} className={classes.textField} variant="outlined" fullWidth label="User Name"
+                                   onChange={(e) => setUsername(e.target.value)}
+                        required={true}/>
+                        <TextField error={passwordError} helperText={passwordError?"Password cannot be empty":""} className={classes.textField} variant="outlined" fullWidth label="Password"   type="password"
+                                   onChange={(e) => setPassword(e.target.value)}
+                        required={true}/>
+                        <div>
+                        </div>
+                    <div>
+                    <Button e className={classes.textField} variant="contained" color="primary" onClick={() => {
+                        if(username.length<2) {
+                            setUserNameError(true)
+                            props.invalidUser()
+                        }
+                        else {
+                            setUserNameError(false)
+                            props.invalidUser()
+                        }
+                        if(password.length<5) {
+                            setPasswordError(true)
+                            props.invalidUser()
+                        }
+                        else{
+                            setPasswordError(false)
+                            props.invalidUser()
+                        }
+                        if(username.length>2 && password.length>5)
+                            props.loginUser({username: username, password: password})
+                    }
+                    }>
                         Sign In
                     </Button>
+            </div>
                     <Typography className={classes.textField}> Don't have an account?
                         <Link to="/signup">Sign Up</Link>
                     </Typography>
@@ -54,11 +92,13 @@ const LogIn = (props) => {
 }
 
 const mtsp=(state)=>({
-    session: state.sessionReducer
+    session: state.sessionReducer,
+    signUpStatus: state.signUpReducer.status
 })
 
 const dtsp=(dispatch)=>({
-    loginUser:(user)=> userActions.login(dispatch,user)
+    loginUser:(user)=> userActions.login(dispatch,user),
+    invalidUser: ()=>userActions.invalidFalse(dispatch)
 })
 
 export default connect(mtsp,dtsp)(LogIn);

@@ -7,6 +7,7 @@ import LogIn from "./components/login/login";
 import SignUp from "./components/signUp/signup";
 import Profile from './components/profile/profile'
 import SearchResults from "./components/searchResults";
+import Basic from "./components/signUp/formikSignUp";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/search" component={SearchResults}/>
           <Route path="/login" exact={true} component={LogIn}/>
           <Route path="/signup" exact={true} component={SignUp}/>
+            <Route path="/formik" exact={true} component={Basic}/>
             <Route
                 path={[
                     "/profile",

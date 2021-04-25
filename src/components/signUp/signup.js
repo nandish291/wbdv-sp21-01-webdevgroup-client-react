@@ -1,204 +1,198 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import {connect} from "react-redux";
 import PrimarySearchAppBar from "../utils/navBar";
 import {Link, useHistory} from "react-router-dom";
-import {createUser} from "../../services/user-service";
+import {useFormik} from 'formik';
+import * as yup from 'yup';
+import * as _ from 'lodash'
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography
+} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 
-const SignUp = () => {
+import signUpActions from "../../actions/signup-action"
 
-    const [firstname, setFirstname] = useState("")
-    const [lastname, setLastname] = useState("")
-    const [dob, setDob] = useState("")
-    const [gender, setGender] = useState("")
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [email, setEmail] = useState("")
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        margin: theme.spacing(2),
+    },
+    formControl: {
+        margin: theme.spacing(2),
+        minWidth: 120,
+    }
+}));
+const SignUp = (props) => {
+    const classes=useStyles();
+    const [checkEmail,setCheckEmail]=useState(false)
+    const [checkUserName,setCheckUserName]=useState(false)
+    const [signUpError,setSignUpError]=useState(false)
     const history = useHistory();
 
-    const user = {
-        firstname: '',
-        lastname: '',
-        dob: '',
-        gender: '',
-        username: '',
-        password: '',
-        email: ''
-    }
+    useEffect(()=>{
+        if(props.signUpState.status===400)
+            setSignUpError(true)
+        else if(props.signUpState.status===200)
+            history.push("/login")
+    },[props.signUpState.status])
 
-    const [cachedItem, setCachedItem] = useState(user)
+    const validationSchema=yup.object({
+        firstName: yup.string()
+            .min(2,'Too Short!')
+            .max(50,'Too Long!')
+            .required('Cannot be blank'),
+        lastName: yup.string()
+            .min(2,'Too Short!')
+            .max(50,'Too Long!')
+            .required('Cannot be blank'),
+        userName: yup.string()
+            .min(2,'Too Short!')
+            .max(50,'Too Long!')
+            .required('Cannot be blank'),
+        email: yup.string()
+            .email('enter valid email address')
+            .required('email cannot be blank'),
+        password: yup.string()
+            .min(8,'password is too short'),
+        confirmPassword: yup.string()
+            .oneOf([yup.ref('password'), null], 'Passwords must match')
+    })
+
+
+    const formik=useFormik({
+        initialValues:{
+            firstName: '',
+            lastName: '',
+            dob: '1995-07-23',
+            gender: '',
+            userName: '',
+            password: '',
+            confirmPassword:'',
+            email:'',
+            type: 'USER'
+        },
+        validationSchema:validationSchema,
+        onSubmit: (values => {
+            console.log(values)
+            props.signUpUser(_.omit(values,['confirmPassword']))
+        })
+    })
+
+    // useEffect(()=>{
+    //     if(formik.touched.userName && !Boolean(formik.errors.userName))
+    //         props.checkUserName(formik.values.userName)
+    // },[checkUserName])
+    useEffect(()=>{
+
+    },[checkEmail])
+
+    const testFunc=()=>{
+        console.log('functioncalled')
+        if(formik.touched.email && !Boolean(formik.errors.email))
+            props.checkEmail(formik.values.email)
+    }
 
     return (
         <>
 
             <PrimarySearchAppBar/>
-            <div className="container">
+            <div className='container'>
+                <Typography variant='h2'>Sign Up</Typography>{
+                signUpError &&
+                <Typography variant='h6' color='error'>There was an error with Sign up request, please check the user
+                    name and email address</Typography>}
+                <form className={classes.root} onSubmit={formik.handleSubmit}>
+                    <TextField value={formik.values.firstName} onChange={formik.handleChange}  id='firstName'
+                               className={classes.textField} label={'First name'} variant='outlined' fullWidth required
+                                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                                helperText={formik.touched.firstName && formik.errors.firstName}
+                                onBlur={formik.handleBlur}/>
+                    <TextField value={formik.values.lastName} onChange={formik.handleChange} id='lastName'
+                               className={classes.textField} label={'Last name'} variant='outlined' fullWidth required
+                               error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                               helperText={formik.touched.lastName && formik.errors.lastName}
+                               onBlur={formik.handleBlur}/>
+                    <TextField value={formik.values.userName} onChange={formik.handleChange} id='userName'
+                               className={classes.textField} label={'User name'} variant='outlined' fullWidth required
+                               error={formik.touched.userName && Boolean(formik.errors.userName)}
+                               helperText={formik.touched.userName && formik.errors.userName}
+                               onBlur={(e)=> {
+                                   formik.handleBlur(e,setCheckUserName(!checkUserName))
+                               }}/>
+                    {
+                        props.signUpState.userNameStatus===400 &&
+                            <Typography variant='h6' color='error'>Username already in use try different user name</Typography>
+                    }
+                    <TextField value={formik.values.email} onChange={formik.handleChange} id='email'
+                               className={classes.textField} label={'Email address'} variant='outlined' fullWidth required
+                               error={formik.touched.email && Boolean(formik.errors.email)}
+                               helperText={formik.touched.email && formik.errors.email}
+                               onBlur={ (e)=> {
+                                   testFunc()
+                               }}/>
+                    {props.signUpState.emailStatus===400 &&
+                        <Typography variant='h6' color='error'>Email address is already in user please use different email</Typography>
+                    }
+                    <TextField value={formik.values.dob} onChange={formik.handleChange} id='dob'
+                               className={classes.textField} label={'Date of Birth'} variant='outlined' fullWidth required
+                               type='date' defaultValue="2017-05-24"/>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-helper-label">Gender</InputLabel>
+                        <Select variant='outlined' value={formik.values.gender} id='gender' name='gender'
+                                labelId="demo-simple-select-helper-label"
+                                onChange={formik.handleChange}
+                        >
+                            <MenuItem value='Male'>Male</MenuItem>
+                            <MenuItem value='Female'>Female</MenuItem>
+                            <MenuItem value='Non-Binary'>Non-Binary</MenuItem>
+                        </Select>
 
-                <div className="col">
-                    <br/>
-                    <h3>Sign Up</h3>
-                    <br/>
-                    <form>
-                        <div className="form-group mb-3">
-                            <input type="text"
-                                   className="form-control"
-                                   placeholder="First Name"
-                                   value={cachedItem.firstname}
-                                   onChange={(e) => {
-                                       setFirstname(e.target.value)
-                                       setCachedItem({...cachedItem, firstname: e.target.value})
-                                   }}
-                            />
-                        </div>
-                        <div className="form-group mb-3">
-                            <input type="text"
-                                   className="form-control"
-                                   placeholder="Last Name"
-                                   value={cachedItem.lastname}
-                                   onChange={(e) => {
-                                       setLastname(e.target.value)
-                                       setCachedItem({...cachedItem, lastname: e.target.value})
-                                   }}
-                            />
-                        </div>
-                        <div className="form-group mb-3">
-                            <input type="date"
-                                   className="form-control"
-                                   placeholder="DOB"
-                                   value={cachedItem.dob}
-                                   onChange={(e) => {
-                                       setDob(e.target.value)
-                                       setCachedItem({...cachedItem, dob: e.target.value})
-                                   }}
-                            />
-                        </div>
-                        <div className="form-group mb-3">
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
+                        <Select variant='outlined' value={formik.values.type} id='type' name='type'
+                                labelId="demo-simple-select-helper-label"
+                                onChange={formik.handleChange}
+                        >
+                            <MenuItem value={'USER'}>USER</MenuItem>
+                            <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
+                        </Select>
 
-                            <select value={cachedItem.gender}
-                                    className="form-control"
-                                    onChange={(e) => {
-                                        setGender(e.target.value)
-                                        setCachedItem({...cachedItem, gender: e.target.value})
-                                    }}
-                            >
-                                <option value={"Select gender:"}>Select gender:</option>
-                                <option value={"Female"}>Female</option>
-                                <option value={"Male"}>Male</option>
-                                <option value={"No answer"}>No answer</option>
-                            </select>
-
-                            {/*<input type="text"*/}
-                            {/*       placeholder="Gender"*/}
-                            {/*       className="form-control"*/}
-                            {/*       value={cachedItem.gender}*/}
-                            {/*       onChange={(e) => {*/}
-                            {/*           setGender(e.target.value)*/}
-                            {/*           setCachedItem({...cachedItem, gender: e.target.value})*/}
-                            {/*       }}*/}
-                            {/*/>*/}
-                        </div>
-                        <div className="form-group mb-3">
-                            <input type="text"
-                                   className="form-control"
-                                   placeholder="Username"
-                                   value={cachedItem.username}
-                                   onChange={(e) => {
-                                       setUsername(e.target.value)
-                                       setCachedItem({...cachedItem, username: e.target.value})
-                                   }}
-                            />
-                        </div>
-                        <div className="form-group mb-3">
-                            <input type="password"
-                                   className="form-control"
-                                   value={cachedItem.password}
-                                   placeholder="Password"
-                                   onChange={(e) => {
-                                       setPassword(e.target.value)
-                                       setCachedItem({...cachedItem, password: e.target.value})
-                                   }}
-                            />
-                        </div>
-                        <div className="form-group mb-3">
-                            <input type="password"
-                                   className="form-control"
-                                   placeholder="Confirm Password"
-                                   value={cachedItem.confirmPassword}
-                                   onChange={(e) => {
-                                       setConfirmPassword(e.target.value)
-                                   }}
-                            />
-                        </div>
-                        <div className="form-group mb-3">
-                            <input type="email"
-                                   className="form-control"
-                                   placeholder="Email Address"
-                                   value={cachedItem.email}
-                                   onChange={(e) => {
-                                       setEmail(e.target.value)
-                                       setCachedItem({...cachedItem, email: e.target.value})
-                                   }}
-
-                            />
-                        </div>
-                        <div className="form-group mb-3 ">
-                            <button className="btn btn-primary"
-                                    onClick={() => {
-
-                                        if (firstname.length === 0) {
-                                            alert("Please enter your first name.")
-                                        } else if (lastname.length === 0) {
-                                            alert("Please enter your last name.")
-                                        } else if (dob.length === 0) {
-                                            alert("Please enter your date of birth.")
-                                        } else if (gender.length === 0) {
-                                            alert("Please select a gender.")
-                                        } else if (username.length === 0) {
-                                            alert("Please provide a username.")
-                                        } else if (password.length === 0) {
-                                            alert("Please provide a password.")
-                                        } else if (confirmPassword.length === 0) {
-                                            alert("Please confirm your password.")
-                                        } else if (password !== confirmPassword) {
-                                            alert("Your password entries do not match.")
-                                        } else if (email.length === 0) {
-                                            alert("Please provide an email.")
-                                        } else {
-
-                                            user.firstname = firstname
-                                            user.lastname = lastname
-                                            user.dob = dob
-                                            user.gender = gender
-                                            user.username = username
-                                            user.password = password
-                                            user.email = email
-
-                                            createUser(user)
-                                                .then(response => {
-
-                                                    if (response === -1) {
-                                                        alert("Username already exists.")
-                                                    } else {
-                                                        history.push("/api/login")
-                                                    }
-                                                })
-                                        }
-                                    }}
-                                    type="button"
-                            >
-                                Sign Up
-                            </button>
-                        </div>
-
-                        <div id="signUpHelp" className="form-text">Already have an account? <Link
-                            to="api/login">Sign-In</Link></div>
-                    </form>
-                </div>
-
+                    </FormControl>
+                    <TextField value={formik.values.password} type='password' onChange={formik.handleChange} id='password'
+                               className={classes.textField} label={'Password'} variant='outlined' fullWidth required
+                               error={formik.touched.password && Boolean(formik.errors.password)}
+                               helperText={formik.touched.password && formik.errors.password}
+                               onBlur={formik.handleBlur}/>
+                    <TextField value={formik.values.confirmPassword} type='password' onChange={formik.handleChange} id='confirmPassword'
+                               className={classes.textField} label={'Confirm Password'} variant='outlined' fullWidth required
+                               error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                               helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                               onBlur={formik.handleBlur}/>
+                    <Button className={classes.textField} type='submit' variant="contained" color="primary">SignUp</Button>
+                </form>
             </div>
-
         </>
     )
 }
 
-export default SignUp
+const mtsp=(state)=>({
+    signUpState: state.signUpReducer
+})
+
+const dtsp=(dispatch)=>({
+  signUpUser: (user)=> signUpActions.signUp(dispatch,user),
+  checkEmail: (email)=> signUpActions.checkEmail(dispatch,email),
+  checkUserName: (userName)=> signUpActions.checkUserName(dispatch,userName)
+})
+export default connect(mtsp,dtsp)(SignUp);

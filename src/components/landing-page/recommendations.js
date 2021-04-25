@@ -1,7 +1,7 @@
 import React,{useEffect} from "react";
 import {connect} from "react-redux";
 import recommendedActions from "../../actions/recommendation-action"
-import {Grid} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import ImgMediaCard from "../utils/imageCard";
 import {makeStyles} from "@material-ui/core/styles";
 
@@ -20,31 +20,52 @@ const Recommendations=(props)=>{
     useEffect(()=> {
         recommendations()
     },[props.location])
+
     const recommendations=()=>{
         if(props.location.length>1) {
             props.findRecommendedOnLocation(props.location);
         }
-        else {
-            props.findRecommended()
+        props.findRecommended()
+    }
+
+    const userRecommendations=()=>{
+
+        if(props.recommendedEvents.eventIds.eventIds){
+            if (props.recommendedEvents.eventIds.eventIds[0])
+                props.findEventsByEvent(props.recommendedEvents.eventIds.eventIds[0])
+            if (props.recommendedEvents.eventIds.eventIds[1])
+                props.findEventByPerformer(props.recommendedEvents.eventIds.eventIds[1])
         }
     }
 
-    return(
+    const getEventIds=async ()=>{
+        await props.findEventsForUser(props.session.user.id)
+    }
 
-        <div>
+    useEffect(()=>{
+        if(props.session.userLoggedin)
+            getEventIds()
+        else
+            props.clearRecommendations()
+
+    },[props.session.userLoggedin])
+
+    useEffect(()=>{
+        userRecommendations()
+    },[props.recommendedEvents.eventIds])
+
+    return(
+    <div>
+        <div style={{margin: '2em'}}>
             {
-                !props.location&&
-                <h1>recommendations</h1>
-            }
-            {
-                props.location&&
-                <h1>Events Around {props.location}</h1>
+                props.recommendedEvents.eventsByPerformer.length>0&&
+                <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[1]} </Typography>
             }
             <div className={classes.root}>
                 <Grid container direction='row' spacing={3} >
                     {
-                        props.recommendedEvents &&
-                        props.recommendedEvents.map(eve=>{
+                        props.recommendedEvents.eventsByPerformer.length>0 &&
+                        props.recommendedEvents.eventsByPerformer.map(eve=>{
                             return(
                                 <Grid key={eve.id} item className={classes.paper}>
                                     <ImgMediaCard event={eve}/>
@@ -55,17 +76,83 @@ const Recommendations=(props)=>{
                 </Grid>
             </div>
         </div>
+        <div style={{margin: '2em'}}>
+            {
+                props.recommendedEvents.eventsByEvent.length>0&&
+                <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[0]} </Typography>
+            }
+            <div className={classes.root}>
+                <Grid container direction='row' spacing={3} >
+                    {
+                        props.recommendedEvents.eventsByEvent.length>0 &&
+                        props.recommendedEvents.eventsByEvent.map(eve=>{
+                            return(
+                                <Grid key={eve.id} item className={classes.paper}>
+                                    <ImgMediaCard event={eve}/>
+                                </Grid>
+                            )
+                        })
+                    }
+                </Grid>
+            </div>
+        </div>
+        <div style={{margin: '2em'}}>
+            {
+                props.location&&
+                <Typography variant='h3'>Events Around {props.location}</Typography>
+            }
+            <div className={classes.root}>
+                <Grid container direction='row' spacing={3} >
+                    {
+                        props.recommendedEvents.recommendedEvents &&
+                        props.recommendedEvents.recommendedEvents.map(eve=>{
+                            return(
+                                <Grid key={eve.id} item className={classes.paper}>
+                                    <ImgMediaCard event={eve}/>
+                                </Grid>
+                            )
+                        })
+                    }
+                </Grid>
+            </div>
+        </div>
+        <div style={{margin: '2em'}}>
+            {
+                <Typography variant='h3'>Recommendations</Typography>
+            }
+            <div className={classes.root}>
+                <Grid container direction='row' spacing={3} >
+                    {
+                        props.recommendedEvents.events &&
+                        props.recommendedEvents.events.map(eve=>{
+                            return(
+                                <Grid key={eve.id} item className={classes.paper}>
+                                    <ImgMediaCard event={eve}/>
+                                </Grid>
+                            )
+                        })
+                    }
+                </Grid>
+            </div>
+        </div>
+    </div>
     )
 }
 
 const stmp=(state)=>({
-    recommendedEvents: state.recommended.recommendedEvents,
-    location: state.navBarReducer.location
+    recommendedEvents: state.recommended,
+    location: state.navBarReducer.location,
+    session: state.sessionReducer,
+
 })
 
 const dtmp=(dispatch)=>({
     findRecommended: ()=> recommendedActions.findRecommended(dispatch),
-    findRecommendedOnLocation: (location) => recommendedActions.findRecommendedonLocation(dispatch,location)
+    findRecommendedOnLocation: (location) => recommendedActions.findRecommendedonLocation(dispatch,location),
+    findEventsForUser: (userId) => recommendedActions.findEventsforUserId(dispatch,userId),
+    findEventsByEvent: (eventId) => recommendedActions.findRecommendedByEvent(dispatch,eventId),
+    findEventByPerformer: (pid)=> recommendedActions.findRecommendedByPerformer(dispatch,pid),
+    clearRecommendations: ()=> recommendedActions.clearRecommendations(dispatch)
 })
 
 export default connect(stmp,dtmp)(Recommendations);

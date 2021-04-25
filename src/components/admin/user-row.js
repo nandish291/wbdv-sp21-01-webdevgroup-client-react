@@ -1,57 +1,19 @@
 import React from 'react'
 
-const UserRow = ({item}) => {
+const UserRow = ({user,deleteUser}) => {
     // const [editing, setEditing] = useState(false)
     // const [cachedItem, setCahedItem] = useState(item)
 
     return (
         <>
             <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto@gmail.com</td>
-                <td>*****</td>
-                <td>12/08/1996</td>
+                <td>{user.firstName}</td>
+                <td>{user.lastName}</td>
+                <td>{user.userName}</td>
+                <td>{user.email}</td>
+                <td>{user.dob}</td>
                 <td>
-                    <button className="btn btn-danger">delete</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto@gmail.com</td>
-                <td>*****</td>
-                <td>12/08/1996</td>
-                <td>
-                    <button className="btn btn-danger">delete</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto@gmail.com</td>
-                <td>*****</td>
-                <td>12/08/1996</td>
-                <td>
-                    <button className="btn btn-danger">delete</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">4</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto@gmail.com</td>
-                <td>*****</td>
-                <td>12/08/1996</td>
-                <td>
-                    <button className="btn btn-danger">delete</button>
+                    <button type='button' onClick={()=>deleteUser(user.id)} className="btn btn-danger">delete</button>
                 </td>
             </tr>
         </>

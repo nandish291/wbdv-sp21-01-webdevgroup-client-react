@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     root: {
         maxWidth: '35vh',
         minWidth: '35vh',
-        minHeight: '30vh',
+        minHeight: '40vh',
         maxHeight:'50vh'
     },
     text: {
@@ -29,7 +29,7 @@ export default function ImgMediaCard({event}) {
                 <CardMedia
                     component="img"
                     alt={event.performers[0].name}
-                    height="140"
+                    height="180"
                     image={event.performers[0].image}
                     title={event.title}
                 />

@@ -15,7 +15,6 @@ import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import searchActions from "../../actions/search-actions";
 import {findLocation} from "../../actions/navBar-actions";
-import {logOut} from "../../services/user-service";
 import userActions from "../../actions/user-actions"
 
 const useStyles = makeStyles((theme) => ({
@@ -127,24 +126,46 @@ const PrimarySearchAppBar=(props)=> {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-           <Link style={{textDecoration:'none',color:'black'}}
-                 to="/api/login">
-               <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
-           </Link>
-           <Link style={{textDecoration:'none',color:'black'}}
-                 to="/profile">
-               <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-           </Link>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-           <Link style={{textDecoration:'none',color:'black'}}>
-               <MenuItem onClick={() => {
-                   logOut()
-                   history.push("/")
-               }}
-               >
-                   Log Out
-               </MenuItem>
-           </Link>
+
+            {
+                !props.session.userLoggedin &&
+                <Link style={{textDecoration: 'none', color: 'black'}}
+                   to="/login">
+                <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
+            </Link>
+            }
+            {
+                !props.session.userLoggedin &&
+                <Link style={{textDecoration:'none',color:'black'}}
+                      to="/signup">
+                    <MenuItem onClick={handleMenuClose}>Sign Up</MenuItem>
+                </Link>
+            }{
+            props.session.userLoggedin &&
+            <Link style={{textDecoration: 'none', color: 'black'}}
+                  to="/profile">
+                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            </Link>}
+            {
+                props.session.userLoggedin && props.session.user.type === "ADMIN" &&
+                <Link style={{textDecoration: 'none', color: 'black'}}
+                      to="/admin">
+                    <MenuItem onClick={handleMenuClose}>User Management</MenuItem>
+                </Link>
+            }
+            {
+                props.session.userLoggedin &&
+                <Link style={{textDecoration: 'none', color: 'black'}}>
+                    <MenuItem onClick={() => {
+                        props.logOut()
+                        history.push("/")
+                    }}
+                    >
+                        Log Out
+                    </MenuItem>
+                </Link>
+            }
+
         </Menu>
     );
 
@@ -238,7 +259,8 @@ const dtsp=(dispatch)=>({
     searchfunction:(text)=> searchActions.findEventsByName(dispatch,text),
     searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text),
     findUserLocation: (location)=> findLocation(dispatch,location),
-    checkLogin:()=> userActions.checkLogin(dispatch)
+    checkLogin:()=> userActions.checkLogin(dispatch),
+    logOut:()=> userActions.logout(dispatch)
 })
 
 export default connect(mtsp,dtsp)(PrimarySearchAppBar);

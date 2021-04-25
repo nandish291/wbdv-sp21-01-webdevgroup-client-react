@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import './event-details.css';
 import Moment from 'moment';
 import PrimarySearchAppBar from "../utils/navBar";
+import {Typography} from "@material-ui/core";
 
 const isEventInInterested=(event,user)=>{
     if(user.interested)
@@ -37,6 +38,7 @@ const EventDetails = (
         event,
         user,
         comments,
+        session,
         findEventById,
         findUserById,
         addEventToInterestedForUser,
@@ -45,8 +47,7 @@ const EventDetails = (
         deleteEventFromAttendingForUser,
         findCommentsByEvent,
         addCommentForEvent,
-        updateCommentForEvent
-
+        updateCommentForEvent,
     }
 ) =>
 {
@@ -59,11 +60,14 @@ const EventDetails = (
     const {eventId} = useParams()
 
     useEffect(() => {
-        // alert(courseId)
-        findUserById(1)
         findEventById(eventId)
         findCommentsByEvent(eventId)
     }, [])
+
+    useEffect(()=>{
+        if(session.userLoggedin)
+            findUserById(session.user.id)
+    },[session.userLoggedin])
 
     return (<>
         <PrimarySearchAppBar/>
@@ -72,50 +76,10 @@ const EventDetails = (
 
             <br/>
 
+
             {/*// Event details*/}
             <div className="row">
-                <div className="col-6">
-
-                    {<div className="card h-100">
-                        <div className="card-body">
-                            <h5 className="card-title">Event Name : <b>{
-                                event &&
-                                event.title}</b></h5>
-                            <p className="card-text">This is a great concert which usually involves 1000+ attendees.
-                                Every year they perform at this festival just for the fans.</p>
-                        </div>
-                        {
-                            event &&
-                            <ul className="list-group list-group-flush">
-                            <li className="list-group-item">Artist: {
-                                event &&
-                                event.performers &&
-                                event.performers.map(p => <b>{p.name}; </b>)
-
-                                }
-                            </li>
-                            <li className="list-group-item">Venue: <b>
-                                {
-                                    event &&
-                                    event.venue &&
-                                    event.venue.name
-
-                                }
-                            </b>
-                            </li>
-                                {/*{Moment(dt).format('MM-DD-YYYY')}*/}
-                            <li className="list-group-item">Date: <b>{
-                                event &&
-                                event.datetime_utc}</b></li>
-                            {/*<li className="list-group-item">Time: <b>{Moment(dt).format('HH:mm')}</b></li>*/}
-                            </ul>
-                        }
-                    </div>
-                    }
-
-
-                </div>
-                <div className="col-6">
+                <div className="col-sm">
 
                     <div className="card h-100">
                         <img src={
@@ -126,9 +90,9 @@ const EventDetails = (
                              className="card-img-top" alt="..."/>
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-3">
+                                <div className="col-sm">
                                     <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                                        <input disabled={!session.userLoggedin} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
 
                                                onChange={
                                                    ()=>{
@@ -147,9 +111,9 @@ const EventDetails = (
                                     </div>
 
                                 </div>
-                                <div className="col-3">
+                                <div className="col-sm">
                                     <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox"
+                                        <input className="form-check-input" type="checkbox" disabled={!session.userLoggedin}
                                                id="flexSwitchCheckDefault1"
                                                onChange={
                                                    ()=>{
@@ -165,7 +129,7 @@ const EventDetails = (
                                                checked={isEventInAttended(event,user)}/>
                                         <label className="form-check-label"
                                                htmlFor="flexSwitchCheckDefault1">{
-                                                   isEventOver(Moment(dt),Moment.locale())?'Attended':'Attending'
+                                            isEventOver(Moment(dt),Moment.locale())?'Attended':'Attending'
                                         }</label>
                                     </div>
 
@@ -178,6 +142,47 @@ const EventDetails = (
                     </div>
 
                 </div>
+                <div className="col-sm">
+
+                    {<div className="card h-100">
+                        <div className="card-body">
+                            <Typography variant='h4'><b>{
+                                event &&
+                                event.title}</b></Typography>
+
+                        </div>
+                        {
+                            event &&
+                            <ul className="list-group list-group-flush">
+                                <li className="list-group-item"><Typography>Artist:</Typography> {
+                                event &&
+                                event.performers &&
+                                event.performers.map(p =><Typography variant='body1' ><b>{p.name} </b></Typography> )
+
+                                }
+                            </li>
+                                <li className="list-group-item"><Typography>Venue:</Typography>
+                                {
+                                    event &&
+                                    event.venue &&
+                                    <Typography><b>{event.venue.name}</b></Typography>
+
+                                }
+                            </li>
+                                {/*{Moment(dt).format('MM-DD-YYYY')}*/}
+                                <li className="list-group-item"><Typography>Date:</Typography> {
+                                event &&
+                                    <Typography>
+                                        <b>{event.datetime_local}</b></Typography>}</li>
+                            {/*<li className="list-group-item">Time: <b>{Moment(dt).format('HH:mm')}</b></li>*/}
+                            </ul>
+                        }
+                    </div>
+                    }
+
+
+                </div>
+
             </div>
 
 
@@ -205,7 +210,7 @@ const EventDetails = (
                                             <img
                                                 className="img-fluid img-responsive rounded-circle mr-2"
                                                 src="https://st.depositphotos.com/2218212/2938/i/950/depositphotos_29387653-stock-photo-facebook-profile.jpg" width="38"/> &nbsp;
-                                            <input type="text"
+                                            <input type="text" disabled={!session.userLoggedin}
                                                    className="form-control mr-3"
                                                    placeholder="Add comment"
                                                    onChange={(e)=>setCahedItem(e.target.value)}
@@ -227,7 +232,7 @@ const EventDetails = (
                                                 addCommentForEvent(com)
                                                 setCahedItem('')
 
-                                            }} className="btn btn-primary" type="button">Comment</button></div>
+                                            }} disabled={!session.userLoggedin} className="btn btn-primary" type="button">Comment</button></div>
                                         {
                                             comments &&
                                             comments.map(comment=>
@@ -280,7 +285,8 @@ const stpm = (state) => {
     return {
         event: state.eventReducer.event,
         user: state.userReducer.user,
-        comments:state.commentReducer.comments
+        comments:state.commentReducer.comments,
+        session: state.sessionReducer
     }
 }
 const dtpm = (dispatch) => {
