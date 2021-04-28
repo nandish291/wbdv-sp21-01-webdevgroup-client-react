@@ -6,10 +6,18 @@ export const EMAIL_STATUS="EMAIL_STATUS"
 
 
 const signUp=async (dispatch,user)=>{
-        dispatch({
-            type: SIGN_UP,
-            status: await userService.createUser(user)
-        })
+        if(user) {
+            dispatch({
+                type: SIGN_UP,
+                status: await userService.createUser(user)
+            })
+        }
+        else {
+            dispatch({
+                type: SIGN_UP,
+                status: 500
+            })
+        }
 }
 
 const checkUserName=async (dispatch,userName)=>{

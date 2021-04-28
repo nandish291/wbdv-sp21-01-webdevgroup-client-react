@@ -14,8 +14,9 @@ import RoomIcon from '@material-ui/icons/Room';
 import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import searchActions from "../../actions/search-actions";
-import {findLocation} from "../../actions/navBar-actions";
+import {findLocation, setLoading} from "../../actions/navBar-actions";
 import userActions from "../../actions/user-actions"
+import signUpActions from "../../actions/signup-action"
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -138,14 +139,19 @@ const PrimarySearchAppBar=(props)=> {
                 !props.session.userLoggedin &&
                 <Link style={{textDecoration:'none',color:'black'}}
                       to="/signup">
-                    <MenuItem onClick={handleMenuClose}>Sign Up</MenuItem>
+                    <MenuItem onClick={()=> {
+                        handleMenuClose()
+                        props.signUpStatusSet()
+                    }}>Sign Up</MenuItem>
                 </Link>
             }{
             props.session.userLoggedin &&
-            <Link style={{textDecoration: 'none', color: 'black'}}
-                  to="/profile">
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            </Link>}
+                <MenuItem onClick={()=> {
+                    handleMenuClose()
+                    props.setLoading()
+                    history.push('/profile')
+                }}>Profile</MenuItem>
+            }
             {
                 props.session.userLoggedin && props.session.user.type === "ADMIN" &&
                 <Link style={{textDecoration: 'none', color: 'black'}}
@@ -157,6 +163,7 @@ const PrimarySearchAppBar=(props)=> {
                 props.session.userLoggedin &&
                 <Link style={{textDecoration: 'none', color: 'black'}}>
                     <MenuItem onClick={() => {
+                        handleMenuClose()
                         props.logOut()
                         history.push("/")
                     }}
@@ -179,6 +186,10 @@ const PrimarySearchAppBar=(props)=> {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
+                        onClick={()=>{
+                            props.setLoading()
+                            history.push('/')
+                        }}
                     >
                         <HomeIcon/>
                     </IconButton>
@@ -199,22 +210,34 @@ const PrimarySearchAppBar=(props)=> {
                                 setSearch(event.target.value)
                             }}
                             value={search}
+                            onKeyPress={(e)=>{
+
+                                if(e.code==="Enter")
+                                {
+                                    if(search.length>0) {
+                                        props.searchUpdate(search)
+                                        props.searchfunction(search)
+                                        history.push(`/search?name=${search}`)
+                                    }
+                                }
+                            }}
                         />
                     </div>
-                    <Link to={`/search?name=${search}`}  style={{ color: 'white' }}>
                     <IconButton
                         edge="start"
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
                         onClick={()=> {
-                            props.searchUpdate(search)
-                            props.searchfunction(search)
+                            if(search.length>0) {
+                                props.searchUpdate(search)
+                                props.searchfunction(search)
+                                history.push(`/search?name=${search}`)
+                            }
                         }}
                     >
                         <SearchIcon/>
                     </IconButton>
-                    </Link>
 
                     <IconButton
                         edge="start"
@@ -252,7 +275,8 @@ const PrimarySearchAppBar=(props)=> {
 const mtsp=(state)=>({
     searchText: state.search.searchText,
     location: state.navBarReducer.location,
-    session: state.sessionReducer
+    session: state.sessionReducer,
+    signUp: state.signUpReducer.signUpStatus
 })
 
 const dtsp=(dispatch)=>({
@@ -260,7 +284,9 @@ const dtsp=(dispatch)=>({
     searchUpdate: (text) => searchActions.searchTextUpdate(dispatch,text),
     findUserLocation: (location)=> findLocation(dispatch,location),
     checkLogin:()=> userActions.checkLogin(dispatch),
-    logOut:()=> userActions.logout(dispatch)
+    logOut:()=> userActions.logout(dispatch),
+    signUpStatusSet:()=> signUpActions.signUp(dispatch),
+    setLoading:()=> setLoading(dispatch,true)
 })
 
 export default connect(mtsp,dtsp)(PrimarySearchAppBar);

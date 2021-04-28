@@ -1,237 +1,142 @@
 import {React, useState} from 'react';
-import {Typography} from "@material-ui/core";
+import {Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import {useFormik} from "formik";
+import * as yup from "yup";
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        margin: theme.spacing(2),
+    },
+    formControl: {
+        margin: theme.spacing(2),
+        minWidth: 120,
+    }
+}));
 
 const BasicInfo = ({user,updateUser,anonymous}) => {
 
-    const [cachedItem, setCahedItem] = useState(user)
+    const classes = useStyles();
+
     const [editing, setEditing] = useState(false)
 
-    const saveName = () => {
-        setEditing(false)
-    }
+    const validationSchema = yup.object({
+        firstName: yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Cannot be blank'),
+        lastName: yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Cannot be blank'),
+        password: yup.string()
+            .min(8, 'password is too short'),
+        confirmPassword: yup.string()
+            .oneOf([yup.ref('password'), null], 'Passwords must match')
+    })
 
-    return(
-        <div className="container-fluid">
+    const formik = useFormik({
+        initialValues: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            dob: user.dob,
+            gender: user.gender,
+            userName: user.userName,
+            password: user.password,
+            confirmPassword: user.password,
+            email: user.email,
+            type: user.type,
+        },
+        enableReinitialize: true,
+        validationSchema: validationSchema,
+        onSubmit: (async values => {
+            await updateUser({...values, id: user.id})
+            setEditing(false)
+        }),
+    })
 
-            <div className="row">
+    return (
+        <div>
+            {
+                !editing &&
+                <div className="container-fluid">
 
-                <div className="col-sm">
+                    <div className={classes.formControl}>
 
-                    <div>
-                        <Typography>First Name</Typography>
-                    </div>
+                        <div>
+                            <Typography>First Name</Typography>
+                        </div>
 
-                    <div>
-                        {
-                            !editing &&
+                        <div>
                             <div>
                                 {user.firstName}
                             </div>
-                        }
+                        </div>
                     </div>
 
-                    <div>
-                        {
-                            editing &&
-                            <div>
-                                <input
-                                    onChange={(e) =>
-                                        setCahedItem({
-                                            ...cachedItem,
-                                            firstName: e.target.value
-                                        })}
-                                    value={cachedItem.firstName}
-                                    className="form-control"/>
-                            </div>
-                        }
-                    </div>
+                    <div className={classes.formControl}>
 
-                </div>
-
-                <div className="col-sm-6">
-
-                    <Typography> Last Name</Typography>
-                    <div>
-                        {
-                            !editing &&
-                            user.lastName
-                        }
-                    </div>
-
-                    <div>
-                        {
-                            editing &&
-                            <div>
-                                <input
-                                    onChange={(e) =>
-                                        setCahedItem({
-                                            ...cachedItem,
-                                            lastName: e.target.value
-                                        })}
-                                    value={cachedItem.lastName}
-                                    className="form-control"/>
-                            </div>
-                        }
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div className="row mt-3">
-
-                <div className="col-sm-6">
-
-                    <Typography> Username</Typography>
-
-                    <div>
-                        {
-                            !editing &&
-                            user.userName
-                        }
-                    </div>
-
-                    <div>
-                        {
-                            editing &&
-                            <div>
-                                <input disabled={true}
-                                    onChange={(e) =>
-                                    setCahedItem({
-                                        ...cachedItem,
-                                        userName: e.target.value
-                                    })}
-                                    value={cachedItem.userName}
-                                    className="form-control"/>
-                            </div>
-                        }
-                    </div>
-
-                </div>
-
-                <div className="col-sm-6">
-
-                    <Typography> Email</Typography>
-
-                    <div>
-                        {
-                            !editing &&
-                            user.email
-                        }
-                    </div>
-
-                    <div>
-                        {
-                            editing &&
-                            <div>
-                                <input
-                                    onChange={(e) =>
-                                        setCahedItem({
-                                            ...cachedItem,
-                                            email: e.target.value
-                                        })}
-                                    value={cachedItem.email}
-                                    className="form-control"/>
-                            </div>
-                        }
-                    </div>
-
-                </div>
-
-                <div className="col-sm-6">
-
-                    {
-                        editing &&
-                        <Typography> Password</Typography>
-                    }
-                    <div>
-                        {
-                            editing &&
-                            <div>
-                                <input
-                                    onChange={(e) =>
-                                        setCahedItem({
-                                            ...cachedItem,
-                                            password: e.target.value
-                                        })}
-                                    value={cachedItem.password} type='password'
-                                    className="form-control"/>
-                            </div>
-                        }
-                    </div>
-
-                </div>
-
-            </div>
-
-            {
-
-                !anonymous &&
-                <div className="row mt-3">
-
-                    <div className="col-sm-6">
-
-                        <Typography>Date of Birth</Typography>
+                        <Typography> Last Name</Typography>
                         <div>
-                            {
-                                !editing &&
-                                user.dob
-                            }
+                            {user.lastName}
                         </div>
 
+                    </div>
+
+
+                    <div className={classes.formControl}>
+
+                        <Typography> Username</Typography>
+
                         <div>
                             {
-                                editing &&
-                                <div>
-                                    <input
-                                        onChange={(e) =>
-                                            setCahedItem({
-                                                ...cachedItem,
-                                                dob: e.target.value
-                                            })}
-                                        value={cachedItem.dob}
-                                        className="form-control"/>
-                                </div>
+                                user.userName
                             }
                         </div>
 
                     </div>
 
-                </div>
-            }
-            <div className="col-sm-6">
+                    <div className={classes.formControl}>
 
-                <Typography> Gender</Typography>
+                        <Typography> Email</Typography>
 
-                <div>
-                    {
-                        !editing &&
-                        user.gender
-                    }
-                </div>
-
-                <div>
-                    {
-                        editing &&
                         <div>
-                            <select
-                                onChange={(e) =>
-                                    setCahedItem({
-                                        ...cachedItem,
-                                        gender: e.target.value
-                                    })}
-                                value={cachedItem.gender}
-                                className="form-control">
-                                <option value='Male'>Male</option>
-                                <option value='Female'>Female</option>
-                                <option value='Non-Binary'>Non-Binary</option>
-                            </select>
+                            {
+                                user.email
+                            }
+                        </div>
+                    </div>
+
+                    {
+
+                        !anonymous &&
+
+                        <div className={classes.formControl}>
+
+                            <Typography>Date of Birth</Typography>
+                            <div>
+                                {
+                                    user.dob
+                                }
+                            </div>
                         </div>
                     }
-                </div>
+                    <div className={classes.formControl}>
 
-            </div>
+                        <Typography> Gender</Typography>
 
+                        <div>
+                            {
+                                user.gender
+                            }
+                        </div>
+                    </div>
+                </div>}
             <br/>
             {
                 !anonymous &&
@@ -242,40 +147,85 @@ const BasicInfo = ({user,updateUser,anonymous}) => {
                     </div>
 
                     <div className="col-6">
-
-
-                        {editing &&
-                        <div>
-                            <button className="btn btn-success"
-                                    onClick={() => {
-                                        updateUser(cachedItem.id, cachedItem)
-                                        setEditing(false)
-                                    }
-                                    }
-                            >Save
-                            </button>
-                            &nbsp;
-                            &nbsp;
-                            <button className="btn btn-danger"
-                                    onClick={() => {
-                                        setEditing(false)
-                                    }}
-                            >Cancel
-                            </button>
-                        </div>
-                        }
                         {
                             !editing &&
-                            <button className="btn btn-primary"
+                            <Button className={classes.textField} type='submit' variant="contained" color="primary"
                                     onClick={() => {
                                         setEditing(true)
-                                    }}
-                            >Edit profile</button>
+                                    }}>
+                                Edit Profile</Button>
                         }
                     </div>
 
                 </div>
             }
+
+            {
+                editing &&
+                <form className={classes.root} onSubmit={formik.handleSubmit}>
+                    <TextField value={formik.values.firstName} onChange={formik.handleChange} id='firstName'
+                               className={classes.textField} label={'First name'} variant='outlined' fullWidth required
+                               error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                               helperText={formik.touched.firstName && formik.errors.firstName}
+                               onBlur={formik.handleBlur}/>
+                    <TextField value={formik.values.lastName} onChange={formik.handleChange} id='lastName'
+                               className={classes.textField} label={'Last name'} variant='outlined' fullWidth required
+                               error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                               helperText={formik.touched.lastName && formik.errors.lastName}
+                               onBlur={formik.handleBlur}/>
+                    <TextField value={formik.values.userName} onChange={formik.handleChange} id='userName'
+                               disabled={true}
+                               className={classes.textField} label={'User name'} variant='outlined' fullWidth
+                               error={formik.touched.userName && Boolean(formik.errors.userName)}
+                               helperText={formik.touched.userName && formik.errors.userName}
+                               onBlur={(e) => {
+                                   formik.handleBlur(e)
+                               }}/>
+                    <TextField value={formik.values.email} onChange={formik.handleChange} id='email' disabled={true}
+                               className={classes.textField} label={'Email address'} variant='outlined' fullWidth
+                               error={formik.touched.email && Boolean(formik.errors.email)}
+                               helperText={formik.touched.email && formik.errors.email}
+                               onBlur={async (e) => {
+                                   await formik.handleBlur(e)
+                               }}/>
+                    <TextField value={formik.values.dob} onChange={formik.handleChange} id='dob'
+                               className={classes.textField} label={'Date of Birth'} variant='outlined' fullWidth
+                               required
+                               type='date' defaultValue="2017-05-24"/>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="gender-select-helper-label">Gender</InputLabel>
+                        <Select variant='outlined' value={formik.values.gender} id='gender' name='gender'
+                                labelId="gender-select-helper-label"
+                                onChange={formik.handleChange}
+                        >
+                            <MenuItem value='Male'>Male</MenuItem>
+                            <MenuItem value='Female'>Female</MenuItem>
+                            <MenuItem value='Non-Binary'>Non-Binary</MenuItem>
+                        </Select>
+
+                    </FormControl>
+                    <TextField value={formik.values.password} type='password' onChange={formik.handleChange}
+                               id='password'
+                               className={classes.textField} label={'Password'} variant='outlined' fullWidth required
+                               error={formik.touched.password && Boolean(formik.errors.password)}
+                               helperText={formik.touched.password && formik.errors.password}
+                               onBlur={formik.handleBlur}/>
+                    <TextField value={formik.values.confirmPassword} type='password' onChange={formik.handleChange}
+                               id='confirmPassword'
+                               className={classes.textField} label={'Confirm Password'} variant='outlined' fullWidth
+                               required
+                               error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                               helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                               onBlur={formik.handleBlur}/>
+                    <Button className={classes.textField} type='submit' variant="contained"
+                            color="primary">Save</Button>
+                    <Button className={classes.textField} onClick={() => {
+                        setEditing(false)
+                    }} type='button' variant="contained">Cancel</Button>
+                </form>
+            }
+
+
         </div>
     )
 

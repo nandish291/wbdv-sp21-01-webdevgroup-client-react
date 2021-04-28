@@ -1,4 +1,4 @@
-const BASEURL="https://webdev-group-sp2101-server.herokuapp.com"
+const BASEURL="http://localhost:8080"
 
 const createUser = (user) =>
     fetch(`${BASEURL}/register`, {
@@ -33,8 +33,8 @@ const addEventToInterestedForUser = (uid, event) =>
         .then(response => response.json())
 
 
-export const updateUser = (uid, user) =>
-    fetch(`${BASEURL}/user/${uid}/update`, {
+export const updateUser = (user) =>
+    fetch(`${BASEURL}/user/update`, {
         method: "PUT",
         body: JSON.stringify(user),
         headers: {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {connect} from "react-redux";
 import PrimarySearchAppBar from "../utils/navBar";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import * as _ from 'lodash'
@@ -34,8 +34,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const SignUp = (props) => {
     const classes=useStyles();
-    const [checkEmail,setCheckEmail]=useState(false)
-    const [checkUserName,setCheckUserName]=useState(false)
     const [signUpError,setSignUpError]=useState(false)
     const history = useHistory();
 
@@ -88,19 +86,6 @@ const SignUp = (props) => {
         })
     })
 
-    // useEffect(()=>{
-    //     if(formik.touched.userName && !Boolean(formik.errors.userName))
-    //         props.checkUserName(formik.values.userName)
-    // },[checkUserName])
-    useEffect(()=>{
-
-    },[checkEmail])
-
-    const testFunc=()=>{
-        console.log('functioncalled')
-        if(formik.touched.email && !Boolean(formik.errors.email))
-            props.checkEmail(formik.values.email)
-    }
 
     return (
         <>
@@ -127,7 +112,9 @@ const SignUp = (props) => {
                                error={formik.touched.userName && Boolean(formik.errors.userName)}
                                helperText={formik.touched.userName && formik.errors.userName}
                                onBlur={(e)=> {
-                                   formik.handleBlur(e,setCheckUserName(!checkUserName))
+                                   formik.handleBlur(e)
+                                   if(formik.touched.userName && !Boolean(formik.errors.userName))
+                                        props.checkUserName(formik.values.userName)
                                }}/>
                     {
                         props.signUpState.userNameStatus===400 &&
@@ -137,8 +124,10 @@ const SignUp = (props) => {
                                className={classes.textField} label={'Email address'} variant='outlined' fullWidth required
                                error={formik.touched.email && Boolean(formik.errors.email)}
                                helperText={formik.touched.email && formik.errors.email}
-                               onBlur={ (e)=> {
-                                   testFunc()
+                               onBlur={async (e)=> {
+                                   await formik.handleBlur(e)
+                                   if(formik.touched.email && !Boolean(formik.errors.email))
+                                       props.checkEmail(formik.values.email)
                                }}/>
                     {props.signUpState.emailStatus===400 &&
                         <Typography variant='h6' color='error'>Email address is already in user please use different email</Typography>
@@ -147,9 +136,9 @@ const SignUp = (props) => {
                                className={classes.textField} label={'Date of Birth'} variant='outlined' fullWidth required
                                type='date' defaultValue="2017-05-24"/>
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-helper-label">Gender</InputLabel>
+                        <InputLabel id="gender-select-helper-label">Gender</InputLabel>
                         <Select variant='outlined' value={formik.values.gender} id='gender' name='gender'
-                                labelId="demo-simple-select-helper-label"
+                                labelId="gender-select-helper-label"
                                 onChange={formik.handleChange}
                         >
                             <MenuItem value='Male'>Male</MenuItem>
@@ -159,13 +148,13 @@ const SignUp = (props) => {
 
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-helper-label">Type</InputLabel>
+                        <InputLabel id="user-select-helper-label">Type</InputLabel>
                         <Select variant='outlined' value={formik.values.type} id='type' name='type'
-                                labelId="demo-simple-select-helper-label"
+                                labelId="user-select-helper-label"
                                 onChange={formik.handleChange}
                         >
-                            <MenuItem value={'USER'}>USER</MenuItem>
-                            <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
+                            <MenuItem value='USER'>USER</MenuItem>
+                            <MenuItem value='ADMIN'>ADMIN</MenuItem>
                         </Select>
 
                     </FormControl>

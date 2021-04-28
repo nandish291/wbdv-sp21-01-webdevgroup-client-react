@@ -4,6 +4,7 @@ import recommendedActions from "../../actions/recommendation-action"
 import {Grid, Typography} from "@material-ui/core";
 import ImgMediaCard from "../utils/imageCard";
 import {makeStyles} from "@material-ui/core/styles";
+import Spinner from "../utils/spinner";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,87 +56,98 @@ const Recommendations=(props)=>{
     },[props.recommendedEvents.eventIds])
 
     return(
-    <div>
-        <div style={{margin: '2em'}}>
-            {
-                props.recommendedEvents.eventsByPerformer.length>0&&
-                <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[1]} </Typography>
-            }
-            <div className={classes.root}>
-                <Grid container direction='row' spacing={3} >
+        <div>{
+
+            !props.loading&&
+            <>
+                <div style={{margin: '2em'}}>
                     {
-                        props.recommendedEvents.eventsByPerformer.length>0 &&
-                        props.recommendedEvents.eventsByPerformer.map(eve=>{
-                            return(
-                                <Grid key={eve.id} item className={classes.paper}>
-                                    <ImgMediaCard event={eve}/>
-                                </Grid>
-                            )
-                        })
+                        props.recommendedEvents.eventsByPerformer.length > 0 &&
+                        <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[1]} </Typography>
                     }
-                </Grid>
-            </div>
-        </div>
-        <div style={{margin: '2em'}}>
-            {
-                props.recommendedEvents.eventsByEvent.length>0&&
-                <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[0]} </Typography>
-            }
-            <div className={classes.root}>
-                <Grid container direction='row' spacing={3} >
+                    <div className={classes.root}>
+                        <Grid container direction='row' spacing={3}>
+                            {
+                                props.recommendedEvents.eventsByPerformer.length > 0 &&
+                                props.recommendedEvents.eventsByPerformer.map(eve => {
+                                    return (
+                                        <Grid key={eve.id} item className={classes.paper}>
+                                            <ImgMediaCard event={eve}/>
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                    </div>
+                </div>
+                <div style={{margin: '2em'}}>
                     {
-                        props.recommendedEvents.eventsByEvent.length>0 &&
-                        props.recommendedEvents.eventsByEvent.map(eve=>{
-                            return(
-                                <Grid key={eve.id} item className={classes.paper}>
-                                    <ImgMediaCard event={eve}/>
-                                </Grid>
-                            )
-                        })
+                        props.recommendedEvents.eventsByEvent.length>0&&
+                        <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[0]} </Typography>
                     }
-                </Grid>
-            </div>
-        </div>
-        <div style={{margin: '2em'}}>
-            {
-                props.location&&
-                <Typography variant='h3'>Events Around {props.location}</Typography>
-            }
-            <div className={classes.root}>
-                <Grid container direction='row' spacing={3} >
+                    <div className={classes.root}>
+                        <Grid container direction='row' spacing={3} >
+                            {
+                                props.recommendedEvents.eventsByEvent.length>0 &&
+                                props.recommendedEvents.eventsByEvent.map(eve=>{
+                                    return(
+                                        <Grid key={eve.id} item className={classes.paper}>
+                                            <ImgMediaCard event={eve}/>
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                    </div>
+                </div>
+                <div style={{margin: '2em'}}>
                     {
-                        props.recommendedEvents.recommendedEvents &&
-                        props.recommendedEvents.recommendedEvents.map(eve=>{
-                            return(
-                                <Grid key={eve.id} item className={classes.paper}>
-                                    <ImgMediaCard event={eve}/>
-                                </Grid>
-                            )
-                        })
+                        props.location&&
+                        <Typography variant='h3'>Events Around {props.location}</Typography>
                     }
-                </Grid>
-            </div>
-        </div>
-        <div style={{margin: '2em'}}>
-            {
-                <Typography variant='h3'>Recommendations</Typography>
-            }
-            <div className={classes.root}>
-                <Grid container direction='row' spacing={3} >
+                    <div className={classes.root}>
+                        <Grid container direction='row' spacing={3} >
+                            {
+                                props.recommendedEvents.recommendedEvents &&
+                                props.recommendedEvents.recommendedEvents.map(eve=>{
+                                    return(
+                                        <Grid key={eve.id} item className={classes.paper}>
+                                            <ImgMediaCard event={eve}/>
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                    </div>
+                </div>
+                <div style={{margin: '2em'}}>
                     {
-                        props.recommendedEvents.events &&
-                        props.recommendedEvents.events.map(eve=>{
-                            return(
-                                <Grid key={eve.id} item className={classes.paper}>
-                                    <ImgMediaCard event={eve}/>
-                                </Grid>
-                            )
-                        })
+                        <Typography variant='h3'>Recommendations</Typography>
                     }
-                </Grid>
-            </div>
+                    <div className={classes.root}>
+                        <Grid container direction='row' spacing={3} >
+                            {
+                                props.recommendedEvents.events &&
+                                props.recommendedEvents.events.map(eve=>{
+                                    return(
+                                        <Grid key={eve.id} item className={classes.paper}>
+                                            <ImgMediaCard event={eve}/>
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                    </div>
+                </div>
+            </>}
+            {
+                props.loading&&
+                    <div style={{margin: '2em'}}>
+                    <Typography variant='h3'>Recommendations</Typography>
+                        <Spinner/>
+                    </div>
+            }
         </div>
-    </div>
     )
 }
 
@@ -143,6 +155,7 @@ const stmp=(state)=>({
     recommendedEvents: state.recommended,
     location: state.navBarReducer.location,
     session: state.sessionReducer,
+    loading: state.navBarReducer.loading
 
 })
 

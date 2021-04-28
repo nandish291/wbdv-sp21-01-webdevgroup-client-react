@@ -3,7 +3,7 @@ import PrimarySearchAppBar from "../utils/navBar";
 import {Link,useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import userActions from "../../actions/user-actions"
-import {Button, FormHelperText, TextField, Typography} from "@material-ui/core";
+import {Button, TextField, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +48,7 @@ const LogIn = (props) => {
                         <Typography variant={"h5"} color='error' style={{display:`${props.session.invalid ?'inline-block':'none'}`}}>
                             Invalid UserName and Password
                         </Typography>
-                        <TextField error={userNameError} helperText={userNameError?"Username cannot be empty":""} className={classes.textField} variant="outlined" fullWidth label="User Name"
+                        <TextField error={userNameError} helperText={userNameError?"Username cannot be empty":""} className={classes.textField} variant="outlined" fullWidth label="User Name/ Email"
                                    onChange={(e) => setUsername(e.target.value)}
                         required={true}/>
                         <TextField error={passwordError} helperText={passwordError?"Password cannot be empty":""} className={classes.textField} variant="outlined" fullWidth label="Password"   type="password"
@@ -58,7 +58,7 @@ const LogIn = (props) => {
                         </div>
                     <div>
                     <Button e className={classes.textField} variant="contained" color="primary" onClick={() => {
-                        if(username.length<2) {
+                        if(username.length<1) {
                             setUserNameError(true)
                             props.invalidUser()
                         }
@@ -66,7 +66,7 @@ const LogIn = (props) => {
                             setUserNameError(false)
                             props.invalidUser()
                         }
-                        if(password.length<5) {
+                        if(password.length<1) {
                             setPasswordError(true)
                             props.invalidUser()
                         }

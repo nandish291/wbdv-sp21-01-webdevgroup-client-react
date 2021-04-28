@@ -1,7 +1,8 @@
-import {GET_LOCATION} from "../actions/navBar-actions";
+import {GET_LOCATION, SET_LOADING} from "../actions/navBar-actions";
 
 const initialState={
-    location:""
+    location:"",
+    loading: true
 }
 
 
@@ -13,6 +14,13 @@ const navBarReducer=(state=initialState,action)=>{
         ...state,
         location: action.location
         }
+            )
+        case SET_LOADING:
+            return (
+                {
+                    ...state,
+                    loading: action.loading
+                }
             )
         default: return state;
     }

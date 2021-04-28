@@ -1,5 +1,5 @@
 import React, {useEffect,useState}  from 'react'
-import {Link, useParams} from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 import eventService from "../../services/event-service";
 import commentService from "../../services/comment-service";
 import userService from "../../services/user-service";
@@ -7,7 +7,15 @@ import {connect} from "react-redux";
 import './event-details.css';
 import Moment from 'moment';
 import PrimarySearchAppBar from "../utils/navBar";
-import {Typography} from "@material-ui/core";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Typography
+} from "@material-ui/core";
+import {SET_LOADING} from "../../actions/navBar-actions";
+import Spinner from "../utils/spinner";
 
 const isEventInInterested=(event,user)=>{
     if(user.interested)
@@ -48,18 +56,22 @@ const EventDetails = (
         findCommentsByEvent,
         addCommentForEvent,
         updateCommentForEvent,
+        loading
     }
 ) =>
 {
 
     const [cachedItem, setCahedItem] = useState('')
     Moment.locale('en');
-
+    const history=useHistory()
     var dt = (event)?event.datetime_local:null;
 
     const {eventId} = useParams()
 
     useEffect(() => {
+        debugger
+        console.log(loading)
+        console.log(history)
         findEventById(eventId)
         findCommentsByEvent(eventId)
     }, [])
@@ -69,15 +81,22 @@ const EventDetails = (
             findUserById(session.user.id)
     },[session.userLoggedin])
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (<>
         <PrimarySearchAppBar/>
         <div className="container">
 
 
             <br/>
+            {
+                !loading&&
+                <>
 
-
-            {/*// Event details*/}
             <div className="row">
                 <div className="col-sm">
 
@@ -92,15 +111,18 @@ const EventDetails = (
                             <div className="row">
                                 <div className="col-sm">
                                     <div className="form-check form-switch">
-                                        <input disabled={!session.userLoggedin} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
 
                                                onChange={
                                                    ()=>{
-                                                       if(isEventInInterested(event,user))
-                                                       {
-                                                           deleteEventFromInterestedForUser(user.id,event.id)
-                                                       }else{
-                                                           addEventToInterestedForUser(user.id,event)
+                                                       if(!session.userLoggedin)
+                                                           setOpen(true)
+                                                       else {
+                                                           if (isEventInInterested(event, user)) {
+                                                               deleteEventFromInterestedForUser(user.id, event.id)
+                                                           } else {
+                                                               addEventToInterestedForUser(user.id, event)
+                                                           }
                                                        }
 
                                                    }
@@ -113,15 +135,18 @@ const EventDetails = (
                                 </div>
                                 <div className="col-sm">
                                     <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox" disabled={!session.userLoggedin}
+                                        <input className="form-check-input" type="checkbox"
                                                id="flexSwitchCheckDefault1"
                                                onChange={
                                                    ()=>{
-                                                       if(isEventInAttended(event,user))
-                                                       {
-                                                           deleteEventFromAttendingForUser(user.id,event.id)
-                                                       }else{
-                                                           addEventToAttendingForUser(user.id,event)
+                                                       if(!session.userLoggedin)
+                                                           setOpen(true)
+                                                       else {
+                                                           if (isEventInAttended(event, user)) {
+                                                               deleteEventFromAttendingForUser(user.id, event.id)
+                                                           } else {
+                                                               addEventToAttendingForUser(user.id, event)
+                                                           }
                                                        }
 
                                                    }
@@ -210,7 +235,7 @@ const EventDetails = (
                                             <img
                                                 className="img-fluid img-responsive rounded-circle mr-2"
                                                 src="https://st.depositphotos.com/2218212/2938/i/950/depositphotos_29387653-stock-photo-facebook-profile.jpg" width="38"/> &nbsp;
-                                            <input type="text" disabled={!session.userLoggedin}
+                                            <input type="text"
                                                    className="form-control mr-3"
                                                    placeholder="Add comment"
                                                    onChange={(e)=>setCahedItem(e.target.value)}
@@ -222,17 +247,20 @@ const EventDetails = (
                                                 //     alert('Enter comment')
                                                 //     return
                                                 // }
-                                                const com = {
-                                                    user: user,
-                                                    event: event,
-                                                    comment: cachedItem,
-                                                    userName: user.userName,
-                                                    likes: 0
+                                                if(!session.userLoggedin)
+                                                    setOpen(true)
+                                                else {
+                                                    const com = {
+                                                        user: user,
+                                                        event: event,
+                                                        comment: cachedItem,
+                                                        userName: user.userName,
+                                                        likes: 0
+                                                    }
+                                                    addCommentForEvent(com)
+                                                    setCahedItem('')
                                                 }
-                                                addCommentForEvent(com)
-                                                setCahedItem('')
-
-                                            }} disabled={!session.userLoggedin} className="btn btn-primary" type="button">Comment</button></div>
+                                            }}  className="btn btn-primary" type="button">Comment</button></div>
                                         {
                                             comments &&
                                             comments.map(comment=>
@@ -274,8 +302,30 @@ const EventDetails = (
             </div>
 
             <br/>
-
+            </>}
+            {
+                loading&&
+                    <Spinner/>
+            }
         </div>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="login-alert-dialog-title"
+            >
+                <DialogTitle id="login-alert-dialog-title">{"Please Login to continue"}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleClose} >
+                        Cancel
+                    </Button>
+                    <Button onClick={()=> {
+                        handleClose()
+                        history.push('/login')
+                    }} color="primary" autoFocus>
+                        Login
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }
@@ -286,21 +336,30 @@ const stpm = (state) => {
         event: state.eventReducer.event,
         user: state.userReducer.user,
         comments:state.commentReducer.comments,
-        session: state.sessionReducer
+        session: state.sessionReducer,
+        loading: state.navBarReducer.loading
     }
 }
 const dtpm = (dispatch) => {
     return {
         findEventById: (eid) => {
+            dispatch({
+                type: SET_LOADING,
+                loading: true
+            })
             eventService.findEventById(eid)
                 .then(eventdetails => {
                     dispatch({
                         type: "FIND_EVENT_BY_ID",
                         event: eventdetails.event
                     })
+                    dispatch({
+                        type: SET_LOADING,
+                        loading: false
+                    })
                 })
         },
-        findUserById: (uid) =>{
+        findUserById: (uid) => {
             userService.findUserById(uid)
                 .then(u => {
                     dispatch({
@@ -310,30 +369,30 @@ const dtpm = (dispatch) => {
                 })
         },
 
-        addEventToInterestedForUser: (uid,event) => {
+        addEventToInterestedForUser: (uid, event) => {
             userService.addEventToInterestedForUser(uid, event)
                 .then(user => dispatch({
                     type: "ADD_EVENT_TO_INTERESTED_FOR_USER",
                     user: user
                 }))
         },
-        deleteEventFromInterestedForUser: (uid,eid) => {
-            userService.deleteEventFromInterestedForUser(uid,eid)
+        deleteEventFromInterestedForUser: (uid, eid) => {
+            userService.deleteEventFromInterestedForUser(uid, eid)
                 .then(user => dispatch({
                     type: "DELETE_EVENT_FROM_INTERESTED_FOR_USER",
                     user: user
                 }))
         },
 
-        addEventToAttendingForUser: (uid,event) => {
+        addEventToAttendingForUser: (uid, event) => {
             userService.addEventToAttendingForUser(uid, event)
                 .then(user => dispatch({
                     type: "ADD_EVENT_TO_ATTENDING_FOR_USER",
                     user: user
                 }))
         },
-        deleteEventFromAttendingForUser: (uid,eid) => {
-            userService.deleteEventFromAttendingForUser(uid,eid)
+        deleteEventFromAttendingForUser: (uid, eid) => {
+            userService.deleteEventFromAttendingForUser(uid, eid)
                 .then(user => dispatch({
                     type: "DELETE_EVENT_FROM_ATTENDING_FOR_USER",
                     user: user
@@ -353,21 +412,21 @@ const dtpm = (dispatch) => {
         addCommentForEvent: (comment) => {
             commentService.addCommentForEvent(comment)
                 .then(status => {
-                    dispatch({
-                        type: "ADD_COMMENT_BY_USER_FOR_EVENT",
-                        comment: comment
-                    })
-                }
+                        dispatch({
+                            type: "ADD_COMMENT_BY_USER_FOR_EVENT",
+                            comment: comment
+                        })
+                    }
                 )
         },
         updateCommentForEvent: (comment) => {
             commentService.updateCommentForEvent(comment)
                 .then(user => dispatch({
                     type: "UPDATE_COMMENT",
-                    comment:comment
+                    comment: comment
                 }))
         },
-        
+
 
     }
 }
