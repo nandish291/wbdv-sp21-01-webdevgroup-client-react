@@ -19,7 +19,6 @@ import Spinner from "../utils/spinner";
 
 
 const isEventInAttended=(event,user)=>{
-    debugger
     if(user && user.attending)
     {
         return user.attending.find(e=>e.id===event.id)? true:false
@@ -231,10 +230,10 @@ const EventDetails = (
                                             comments &&
                                             comments.map(comment=>
 
-                                                <div className="commented-section mt-2">
+                                                <div className="commented-section mt-2 border-bottom">
                                                     <div className="d-flex flex-row align-items-center commented-user">
                                                         <Link to={`/profile/${comment.user.id}`}
-                                                        ><h5 className="mr-2">{comment.userName}</h5></Link>
+                                                        ><h5 className="mr-2">{comment.user.userName}</h5></Link>
                                                     </div>
                                                     <div className="comment-text-sm">
                                                         <span>{comment.comment}</span>
@@ -245,7 +244,7 @@ const EventDetails = (
                                                             <span className="dot ml-2"></span>
                                                             <Link onClick={()=>{
                                                                 updateCommentForEvent(comment)
-                                                            }}> <h6 className="ml-2 mt-1">&nbsp; Like</h6></Link>
+                                                            }}> <h6 className="ml-2 mt-1">&nbsp; Claps</h6></Link>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -266,7 +265,7 @@ const EventDetails = (
 
                 </div>
             </div>
-
+{/*s*/}
             <br/>
             </>}
             {
@@ -351,6 +350,10 @@ const dtpm = (dispatch) => {
         },
 
         addEventToAttendingForUser: (uid, event) => {
+            if(uid === undefined || event === undefined)
+            {
+                return
+            }
             userService.addEventToAttendingForUser(uid, event)
                 .then(user => dispatch({
                     type: "ADD_EVENT_TO_ATTENDING_FOR_USER",
@@ -358,6 +361,10 @@ const dtpm = (dispatch) => {
                 }))
         },
         deleteEventFromAttendingForUser: (uid, eid) => {
+            if(uid === undefined || eid === undefined)
+            {
+                return
+            }
             userService.deleteEventFromAttendingForUser(uid, eid)
                 .then(user => dispatch({
                     type: "DELETE_EVENT_FROM_ATTENDING_FOR_USER",
@@ -376,11 +383,17 @@ const dtpm = (dispatch) => {
         },
 
         addCommentForEvent: (comment) => {
+
+            if(comment === undefined|| comment.comment === '')
+            {
+                alert("please enter a comment")
+                return
+            }
             commentService.addCommentForEvent(comment)
-                .then(status => {
+                .then(NewComment => {
                         dispatch({
                             type: "ADD_COMMENT_BY_USER_FOR_EVENT",
-                            comment: comment
+                            comment: NewComment
                         })
                     }
                 )

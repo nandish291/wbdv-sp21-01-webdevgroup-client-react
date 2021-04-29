@@ -92,6 +92,7 @@ const SignUp = (props) => {
 
             <PrimarySearchAppBar/>
             <div className='container'>
+                <br/>
                 <Typography variant='h2'>Sign Up</Typography>{
                 signUpError &&
                 <Typography variant='h6' color='error'>There was an error with Sign up request, please check the user

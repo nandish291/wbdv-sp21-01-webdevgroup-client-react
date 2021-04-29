@@ -1,5 +1,7 @@
 const BASEURL="https://webdev-group-sp2101-server.herokuapp.com"
 
+// const BASEURL="http://localhost:8080"
+
 const createUser = (user) =>
     fetch(`${BASEURL}/register`, {
         method: 'POST',
