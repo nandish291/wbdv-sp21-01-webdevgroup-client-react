@@ -33,7 +33,6 @@ const Profile = (
     const [followingUser, setFollowingUser] = useState(false)
 
     useEffect(() => {
-        debugger
         console.log(loading)
         if (uid) {
             findUserDetails(uid)
@@ -51,7 +50,6 @@ const Profile = (
 
     useEffect(() => {
         if (session.userLoggedin && anonymous) {
-            debugger
             if (followers) {
                 if (followers.find(follower => follower.id === session.user.id))
                     setFollowingUser(true)

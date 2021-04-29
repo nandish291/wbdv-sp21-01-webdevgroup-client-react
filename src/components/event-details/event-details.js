@@ -19,6 +19,7 @@ import Spinner from "../utils/spinner";
 
 
 const isEventInAttended=(event,user)=>{
+    debugger
     if(user.attending)
     {
         return user.attending.find(e=>e.id===event.id)? true:false
@@ -59,15 +60,16 @@ const EventDetails = (
 
     const {eventId} = useParams()
 
-    useEffect(() => {
-        findEventById(eventId)
-        findCommentsByEvent(eventId)
-    }, [])
-
     useEffect(()=>{
         if(session.userLoggedin)
             findUserById(session.user.id)
     },[session.userLoggedin])
+
+
+    useEffect(() => {
+        findEventById(eventId)
+        findCommentsByEvent(eventId)
+    }, [])
 
     const [open, setOpen] = React.useState(false);
 

@@ -16,61 +16,43 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.text.secondary,
     },
 }));
-const Recommendations=(props)=>{
+const Recommendations=(props)=> {
     const classes = useStyles();
-    useEffect(()=> {
+    useEffect(() => {
         recommendations()
-    },[props.location])
+    }, [props.location])
 
-    const recommendations=()=>{
-        if(props.location.length>1) {
+    const recommendations = () => {
+        if (props.location.length > 1) {
             props.findRecommendedOnLocation(props.location);
         }
         props.findRecommended()
     }
 
-    const userRecommendations=()=>{
-
-        if(props.recommendedEvents.eventIds.eventIds){
-            if (props.recommendedEvents.eventIds.eventIds[0])
-                props.findEventsByEvent(props.recommendedEvents.eventIds.eventIds[0])
-            if (props.recommendedEvents.eventIds.eventIds[1])
-                props.findEventByPerformer(props.recommendedEvents.eventIds.eventIds[1])
-        }
-    }
-
-    const getEventIds=async ()=>{
-        await props.findEventsForUser(props.session.user.id)
-    }
-
-    useEffect(()=>{
-        if(props.session.userLoggedin)
-            getEventIds()
+    useEffect(() => {
+        if (props.session.userLoggedin)
+            props.findRecommendationForUser(props.session.user.id)
         else
             props.clearRecommendations()
 
-    },[props.session.userLoggedin])
+    }, [props.session.userLoggedin])
 
-    useEffect(()=>{
-        if(props.session.userLoggedin)
-            userRecommendations()
-    },[props.recommendedEvents.eventIds])
 
-    return(
+    return (
         <div>{
 
-            !props.loading&&
+            !props.loading &&
             <>
                 <div style={{margin: '2em'}}>
                     {
-                        props.session.userLoggedin && props.recommendedEvents.eventsByPerformer.length > 0 &&
-                        <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[1]} </Typography>
+                        props.location &&
+                        <Typography variant='h3'>Events Around {props.location}</Typography>
                     }
                     <div className={classes.root}>
                         <Grid container direction='row' spacing={3}>
                             {
-                                props.session.userLoggedin && props.recommendedEvents.eventsByPerformer.length > 0 &&
-                                props.recommendedEvents.eventsByPerformer.map(eve => {
+                                props.recommendedEvents.recommendedEvents &&
+                                props.recommendedEvents.recommendedEvents.map(eve => {
                                     return (
                                         <Grid key={eve.id} item className={classes.paper}>
                                             <ImgMediaCard event={eve}/>
@@ -83,35 +65,16 @@ const Recommendations=(props)=>{
                 </div>
                 <div style={{margin: '2em'}}>
                     {
-                        props.session.userLoggedin && props.recommendedEvents.eventsByEvent.length>0 &&
-                        <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[0]} </Typography>
+                        props.session.userLoggedin && props.recommendedEvents.userRecommendations &&
+                        props.recommendedEvents.userRecommendations.length>0&&
+                        <Typography variant='h3'>Based on your activity</Typography>
                     }
                     <div className={classes.root}>
-                        <Grid container direction='row' spacing={3} >
+                        <Grid container direction='row' spacing={3}>
                             {
-                                props.session.userLoggedin && props.recommendedEvents.eventsByEvent.length>0 &&
-                                props.recommendedEvents.eventsByEvent.map(eve=>{
-                                    return(
-                                        <Grid key={eve.id} item className={classes.paper}>
-                                            <ImgMediaCard event={eve}/>
-                                        </Grid>
-                                    )
-                                })
-                            }
-                        </Grid>
-                    </div>
-                </div>
-                <div style={{margin: '2em'}}>
-                    {
-                        props.location&&
-                        <Typography variant='h3'>Events Around {props.location}</Typography>
-                    }
-                    <div className={classes.root}>
-                        <Grid container direction='row' spacing={3} >
-                            {
-                                props.recommendedEvents.recommendedEvents &&
-                                props.recommendedEvents.recommendedEvents.map(eve=>{
-                                    return(
+                                props.session.userLoggedin && props.recommendedEvents.userRecommendations &&
+                                props.recommendedEvents.userRecommendations.map(eve => {
+                                    return (
                                         <Grid key={eve.id} item className={classes.paper}>
                                             <ImgMediaCard event={eve}/>
                                         </Grid>
@@ -126,11 +89,11 @@ const Recommendations=(props)=>{
                         <Typography variant='h3'>Recommendations</Typography>
                     }
                     <div className={classes.root}>
-                        <Grid container direction='row' spacing={3} >
+                        <Grid container direction='row' spacing={3}>
                             {
                                 props.recommendedEvents.events &&
-                                props.recommendedEvents.events.map(eve=>{
-                                    return(
+                                props.recommendedEvents.events.map(eve => {
+                                    return (
                                         <Grid key={eve.id} item className={classes.paper}>
                                             <ImgMediaCard event={eve}/>
                                         </Grid>
@@ -142,11 +105,11 @@ const Recommendations=(props)=>{
                 </div>
             </>}
             {
-                props.loading&&
-                    <div style={{margin: '2em'}}>
+                props.loading &&
+                <div style={{margin: '2em'}}>
                     <Typography variant='h3'>Recommendations</Typography>
-                        <Spinner/>
-                    </div>
+                    <Spinner/>
+                </div>
             }
         </div>
     )
@@ -162,11 +125,9 @@ const stmp=(state)=>({
 
 const dtmp=(dispatch)=>({
     findRecommended: ()=> recommendedActions.findRecommended(dispatch),
-    findRecommendedOnLocation: (location) => recommendedActions.findRecommendedonLocation(dispatch,location),
-    findEventsForUser: (userId) => recommendedActions.findEventsforUserId(dispatch,userId),
-    findEventsByEvent: (eventId) => recommendedActions.findRecommendedByEvent(dispatch,eventId),
-    findEventByPerformer: (pid)=> recommendedActions.findRecommendedByPerformer(dispatch,pid),
-    clearRecommendations: ()=> recommendedActions.clearRecommendations(dispatch)
+    findRecommendedOnLocation: (location) => recommendedActions.findRecommendationLocation(dispatch,location),
+    clearRecommendations: ()=> recommendedActions.clearRecommendations(dispatch),
+    findRecommendationForUser:(userId)=>recommendedActions.findRecommendationForUser(dispatch,userId)
 })
 
 export default connect(stmp,dtmp)(Recommendations);
