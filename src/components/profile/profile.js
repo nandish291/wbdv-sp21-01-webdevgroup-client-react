@@ -81,9 +81,10 @@ const Profile = (
 
 
                             <div className="text-center">
+                                <br/>
                                 <img
                                     src="https://st.depositphotos.com/2218212/2938/i/950/depositphotos_29387653-stock-photo-facebook-profile.jpg"
-                                    className="card-img-top profile-pic"/>
+                                    className="img-fluid img-thumbnail"/>
                             </div>
 
                             <div className="card-body">
