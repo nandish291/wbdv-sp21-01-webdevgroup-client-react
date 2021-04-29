@@ -8,8 +8,9 @@ import {connect} from "react-redux";
 import Event from "./event";
 import {Button, Typography} from "@material-ui/core";
 import Spinner from "../utils/spinner";
-import {People} from "@material-ui/icons";
 import userActions from '../../actions/user-actions'
+import People from './people'
+import {setLoading} from '../../actions/navBar-actions'
 
 const Profile = (
     {
@@ -21,19 +22,23 @@ const Profile = (
         unFollow,
         findUserDetails,
         followers,
-        following
+        following,
+        setLoading
     }
 ) => {
 
     const {uid} = useParams();
     const [isInfoTab, setIsInfoTab] = useState(0)
     const [anonymous, setAnonymous] = useState(true)
-    const [followingUser,setFollowingUser]= useState(false)
+    const [followingUser, setFollowingUser] = useState(false)
 
     useEffect(() => {
+        debugger
         console.log(loading)
-        if (uid)
+        if (uid) {
             findUserDetails(uid)
+            setAnonymous(true)
+        }
         else if (session.userLoggedin) {
             findUserDetails(session.user.id)
             setAnonymous(false)
@@ -42,19 +47,19 @@ const Profile = (
             setAnonymous(false)
         }
 
-    }, [session.userLoggedin])
+    }, [session.userLoggedin, uid])
 
-    useEffect(()=>{
-        if(session.userLoggedin && anonymous)
-        {
+    useEffect(() => {
+        if (session.userLoggedin && anonymous) {
             debugger
-            if(followers)
-            {
-                if(followers.find(follower=>follower.id===session.user.id))
+            if (followers) {
+                if (followers.find(follower => follower.id === session.user.id))
                     setFollowingUser(true)
+                else
+                    setFollowingUser(false)
             }
         }
-    },[session.followStatus,session.unfollowStatus])
+    }, [followers,uid])
 
     return (
         <>
@@ -81,16 +86,16 @@ const Profile = (
                                 <h5 className="card-title text-center">{user.firstName} {user.lastName}</h5>
                                 {
                                     anonymous && !followingUser &&
-                                    <Button onClick={()=>{
-                                        if(session.userLoggedin)
-                                            follow(session.user.id,user.id)
+                                    <Button onClick={() => {
+                                        if (session.userLoggedin)
+                                            follow(session.user.id, user.id)
                                     }} fullWidth style={{float: 'right'}} color='primary'
                                             variant='contained'>Follow</Button>}
                                 {
                                     anonymous && followingUser &&
-                                    <Button onClick={()=>{
-                                        if(session.userLoggedin)
-                                            unFollow(session.user.id,user.id)
+                                    <Button onClick={() => {
+                                        if (session.userLoggedin)
+                                            unFollow(session.user.id, user.id)
                                     }} fullWidth style={{float: 'right'}}
                                             variant='contained'>UnFollow</Button>
                                 }
@@ -121,8 +126,8 @@ const Profile = (
                                             </Link>}
                                         </li>
                                         <li className="nav-item">{
-                                            <Link className={`nav-link ${isInfoTab === 3 ? 'active' : ''}`} to="#"
-                                                  onClick={() => setIsInfoTab(3)}
+                                            <Link className={`nav-link ${isInfoTab === 2 ? 'active' : ''}`} to="#"
+                                                  onClick={() => setIsInfoTab(2)}
                                             >
                                                 <Typography>People</Typography>
                                             </Link>}
@@ -140,7 +145,7 @@ const Profile = (
                                     }
                                     {
                                         isInfoTab === 2 &&
-                                        <People user={user}/>
+                                        <People followers={followers} following={following} setLoading={setLoading}/>
                                     }
                                 </div>
                             </div>
@@ -180,7 +185,8 @@ const dtpm = (dispatch) => {
         },
         follow: (userId,targetId)=> userActions.followUser(dispatch,userId,targetId),
         unFollow: (userId,targetId)=> userActions.unFollowUser(dispatch,userId,targetId),
-        findUserDetails: (userId)=> userActions.findUserDetails(dispatch,userId)
+        findUserDetails: (userId)=> userActions.findUserDetails(dispatch,userId),
+        setLoading:()=> setLoading(dispatch,true)
     }
 }
 

@@ -6,8 +6,6 @@ const initState={
     user: {},
     invalid: false,
     userLoggedin:false,
-    followStatus: false,
-    unfollowStatus: false,
     users:[]
 }
 
@@ -37,18 +35,6 @@ const sessionReducer=(state=initState,action)=>{
             return ({
                 ...state,
                 users: state.users.filter(user=>user.id!==action.userId)
-            })
-        }
-        case FOLLOW:{
-            return ({
-                ...state,
-                followStatus: action.status
-            })
-        }
-        case UNFOLLOW:{
-            return ({
-                ...state,
-                unfollowStatus: action.status
             })
         }
         default: return state;

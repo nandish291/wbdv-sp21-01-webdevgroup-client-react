@@ -1,8 +1,12 @@
-import {SET_USER_DETAILS} from "../actions/user-actions";
+import {FOLLOW, SET_USER_DETAILS, UNFOLLOW} from "../actions/user-actions";
 
 const initialState = {
     user: [],
-    userDetails:{}
+    userDetails:{
+        user:{},
+        followers:[],
+        following:[]
+    }
 }
 
 const userReducer = (state=initialState, action) => {
@@ -22,6 +26,12 @@ const userReducer = (state=initialState, action) => {
                 userDetails: action.userDetails
             })
         }
+        case FOLLOW:
+        case UNFOLLOW:
+            return ({
+                ...state,
+                userDetails: {...state.userDetails,followers: action.followers}
+            })
         default:
             return state
     }

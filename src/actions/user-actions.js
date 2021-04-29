@@ -72,28 +72,20 @@ const deleteUser=(dispatch,userId)=>{
 }
 
 const followUser=async (dispatch,userId,targetId)=>{
-    dispatch({
-        type: FOLLOW,
-        status: false
-    })
     userService.followUser(userId,targetId)
-        .then(status=>
+        .then(followers=>
         dispatch({
             type: FOLLOW,
-            status
+            followers
         }))
 }
 
 const unFollowUser=async (dispatch,userId,targetId)=>{
-    dispatch({
-        type: UNFOLLOW,
-        status: false
-    })
     userService.unFollowUser(userId,targetId)
-        .then(status=>
+        .then(followers=>
     dispatch({
         type: UNFOLLOW,
-        status
+        followers
     }))
 }
 
