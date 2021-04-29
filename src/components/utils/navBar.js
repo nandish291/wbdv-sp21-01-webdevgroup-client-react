@@ -256,6 +256,10 @@ const PrimarySearchAppBar=(props)=> {
                     </IconButton>
 
                     <div className={classes.grow} />
+                    {
+                        props.session.userLoggedin&&
+                        <Typography variant='body1'>{props.session.user.userName}</Typography>
+                    }
                     <div >
                         <IconButton
                             edge="end"
