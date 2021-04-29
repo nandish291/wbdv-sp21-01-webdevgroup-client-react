@@ -1,7 +1,9 @@
-import {getRecommendedEvents, getRecommendedEventsOnLocation} from "../services/recommendation-service";
+import {getRecommendedEvents, getRecommendedEventsOnLocation,findRecommendationsForUser} from "../services/recommendation-service";
 
 export const FIND_RECOMMENDED_EVENTS="FIND_RECOMMENDED_EVENTS";
 export const FIND_RECOMMENDED_EVENTS_ON_LOCATION="FIND_RECOMMENDED_EVENTS_ON_LOCATION";
+export const CLEAR_RECOMMENDATIONS="CLEAR_RECOMMENDATIONS";
+export const USER_RECOMMENDATIONS="USER_RECOMMENDATIONS"
 
 const findRecommended=(dispatch)=>{
     getRecommendedEvents()
@@ -11,7 +13,7 @@ const findRecommended=(dispatch)=>{
         }))
 }
 
-const findRecommendedonLocation=(dispatch,location)=>{
+const findRecommendationLocation=(dispatch,location)=>{
     getRecommendedEventsOnLocation(location)
         .then(events=>dispatch({
             type:FIND_RECOMMENDED_EVENTS_ON_LOCATION,
@@ -19,6 +21,18 @@ const findRecommendedonLocation=(dispatch,location)=>{
         }))
 }
 
-const carouselActions={findRecommended,findRecommendedonLocation}
+const clearRecommendations=(dispatch)=>{
+    dispatch({
+        type: CLEAR_RECOMMENDATIONS
+    })
+}
 
-export default carouselActions;
+const findRecommendationForUser=(dispatch,userId)=>{
+    findRecommendationsForUser(userId)
+        .then(response=>dispatch({
+            type: USER_RECOMMENDATIONS,
+            events: response
+        }))
+}
+
+export default {findRecommended,clearRecommendations,findRecommendationLocation,findRecommendationForUser}

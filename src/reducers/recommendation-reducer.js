@@ -1,7 +1,13 @@
-import{FIND_RECOMMENDED_EVENTS,FIND_RECOMMENDED_EVENTS_ON_LOCATION} from "../actions/recommendation-action";
+import {
+    CLEAR_RECOMMENDATIONS,
+    FIND_RECOMMENDED_EVENTS,
+    FIND_RECOMMENDED_EVENTS_ON_LOCATION, USER_RECOMMENDATIONS
+} from "../actions/recommendation-action";
 
 const initialState={
-    recommendedEvents:[]
+    recommendedEvents:[],
+    events:[],
+    userRecommendations:[]
 }
 
 const RecommendationReducer=(state=initialState,action)=>{
@@ -9,13 +15,23 @@ const RecommendationReducer=(state=initialState,action)=>{
         case FIND_RECOMMENDED_EVENTS:
             return{
                 ...state,
-                recommendedEvents: action.events
+                events: action.events
             }
         case FIND_RECOMMENDED_EVENTS_ON_LOCATION:
             return {
                 ...state,
                 recommendedEvents: action.events
             }
+        case CLEAR_RECOMMENDATIONS:
+            return {
+                ...state,
+            }
+        case USER_RECOMMENDATIONS: {
+            return ({
+                ...state,
+                userRecommendations: action.events
+            })
+        }
         default: return state;
     }
 }

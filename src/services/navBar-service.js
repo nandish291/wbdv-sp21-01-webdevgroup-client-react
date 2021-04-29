@@ -6,4 +6,8 @@ export const findLocationService=({latitude,longitude})=>
             latlng: `${latitude},${longitude}`,
             key: 'AIzaSyCaByfHciX9BVfm6WHQVUHjBN8_pT4ls2g'
         }),{mode: "cors"})
-        .then(response=>response.json())
+        .then(response=> {
+            console.log(('location',response))
+            return(
+            response.json())
+        })

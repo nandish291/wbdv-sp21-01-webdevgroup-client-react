@@ -7,6 +7,7 @@ import navBarReducer from "./navBar-reducer";
 import userReducer from "./user-reducer";
 import commentReducer from "./comment-reducer";
 import sessionReducer from "./session-reducer";
+import signUpReducer from "./signUp-reducer";
 
 export default combineReducers({
     carousel: CarouselReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
     navBarReducer,
     userReducer,
     commentReducer,
-    sessionReducer
+    sessionReducer,
+    signUpReducer
 })
