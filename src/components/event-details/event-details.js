@@ -20,7 +20,7 @@ import Spinner from "../utils/spinner";
 
 const isEventInAttended=(event,user)=>{
     debugger
-    if(user.attending)
+    if(user && user.attending)
     {
         return user.attending.find(e=>e.id===event.id)? true:false
     }

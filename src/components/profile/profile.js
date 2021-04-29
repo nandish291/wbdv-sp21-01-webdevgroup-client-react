@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import './profile-style.css'
 import BasicInfo from './basic-info.js'
 import PrimarySearchAppBar from "../utils/navBar";
-import {Link, useParams} from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 import userService from "../../services/user-service";
 import {connect} from "react-redux";
 import Event from "./event";
-import {Button, Typography} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogTitle, Typography} from "@material-ui/core";
 import Spinner from "../utils/spinner";
 import userActions from '../../actions/user-actions'
 import People from './people'
@@ -31,6 +31,12 @@ const Profile = (
     const [isInfoTab, setIsInfoTab] = useState(0)
     const [anonymous, setAnonymous] = useState(true)
     const [followingUser, setFollowingUser] = useState(false)
+    const [open, setOpen] = React.useState(false);
+    const history=useHistory();
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         console.log(loading)
@@ -63,7 +69,7 @@ const Profile = (
         <>
             <PrimarySearchAppBar/>
             {
-                !loading &&
+                !loading && user &&
                 <div className='container' style={{marginBottom: '2em'}}>
                     <br/>
                     <h1>Profile</h1>
@@ -87,6 +93,8 @@ const Profile = (
                                     <Button onClick={() => {
                                         if (session.userLoggedin)
                                             follow(session.user.id, user.id)
+                                        else
+                                            setOpen(true)
                                     }} fullWidth style={{float: 'right'}} color='primary'
                                             variant='contained'>Follow</Button>}
                                 {
@@ -156,6 +164,24 @@ const Profile = (
                 loading &&
                 <Spinner/>
             }
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="login-alert-dialog-title"
+            >
+                <DialogTitle id="login-alert-dialog-title">{"Please Login to continue"}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleClose} >
+                        Cancel
+                    </Button>
+                    <Button onClick={()=> {
+                        handleClose()
+                        history.push('/login')
+                    }} color="primary" autoFocus>
+                        Login
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 
