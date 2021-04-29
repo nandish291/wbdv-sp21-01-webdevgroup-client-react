@@ -50,7 +50,8 @@ const AdminDashBoard = (props) => {
                                     <tbody>
                                     {
                                         props.session.users.map(user=>
-                                        <UserRow key={user.id} user={user} deleteUser={(userId)=>props.deleteUser(userId)}/>)
+                                            !(user.type==="ADMIN") &&
+                                            <UserRow key={user.id} user={user} deleteUser={(userId)=>props.deleteUser(userId)}/>)
                                     }
                                     </tbody>
                                 </table>
