@@ -265,7 +265,7 @@ const EventDetails = (
 
                 </div>
             </div>
-
+{/*s*/}
             <br/>
             </>}
             {
