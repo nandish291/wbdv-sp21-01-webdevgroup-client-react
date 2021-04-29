@@ -17,13 +17,6 @@ import {
 import {SET_LOADING} from "../../actions/navBar-actions";
 import Spinner from "../utils/spinner";
 
-const isEventInInterested=(event,user)=>{
-    if(user.interested)
-    {
-        return user.interested.find(e=>e.id===event.id)? true:false
-    }
-    return false
-}
 
 const isEventInAttended=(event,user)=>{
     if(user.attending)
@@ -49,8 +42,6 @@ const EventDetails = (
         session,
         findEventById,
         findUserById,
-        addEventToInterestedForUser,
-        deleteEventFromInterestedForUser,
         addEventToAttendingForUser,
         deleteEventFromAttendingForUser,
         findCommentsByEvent,
@@ -69,9 +60,6 @@ const EventDetails = (
     const {eventId} = useParams()
 
     useEffect(() => {
-        debugger
-        console.log(loading)
-        console.log(history)
         findEventById(eventId)
         findCommentsByEvent(eventId)
     }, [])
@@ -109,30 +97,6 @@ const EventDetails = (
                              className="card-img-top" alt="..."/>
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-sm">
-                                    <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
-
-                                               onChange={
-                                                   ()=>{
-                                                       if(!session.userLoggedin)
-                                                           setOpen(true)
-                                                       else {
-                                                           if (isEventInInterested(event, user)) {
-                                                               deleteEventFromInterestedForUser(user.id, event.id)
-                                                           } else {
-                                                               addEventToInterestedForUser(user.id, event)
-                                                           }
-                                                       }
-
-                                                   }
-                                               }
-                                               checked={isEventInInterested(event,user)}/>
-                                        <label className="form-check-label"
-                                               htmlFor="flexSwitchCheckDefault">Interested</label>
-                                    </div>
-
-                                </div>
                                 <div className="col-sm">
                                     <div className="form-check form-switch">
                                         <input className="form-check-input" type="checkbox"
@@ -337,7 +301,7 @@ const stpm = (state) => {
         user: state.userReducer.user,
         comments:state.commentReducer.comments,
         session: state.sessionReducer,
-        loading: state.navBarReducer.loading
+        loading: state.navBarReducer.loading,
     }
 }
 const dtpm = (dispatch) => {

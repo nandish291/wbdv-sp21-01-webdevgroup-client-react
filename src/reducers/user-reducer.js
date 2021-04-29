@@ -1,6 +1,8 @@
+import {SET_USER_DETAILS} from "../actions/user-actions";
 
 const initialState = {
-    user: []
+    user: [],
+    userDetails:{}
 }
 
 const userReducer = (state=initialState, action) => {
@@ -14,6 +16,12 @@ const userReducer = (state=initialState, action) => {
                 ...state,
                 user: action.user
             }
+        case SET_USER_DETAILS:{
+            return ({
+                ...state,
+                userDetails: action.userDetails
+            })
+        }
         default:
             return state
     }

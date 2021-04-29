@@ -132,7 +132,10 @@ const PrimarySearchAppBar=(props)=> {
                 !props.session.userLoggedin &&
                 <Link style={{textDecoration: 'none', color: 'black'}}
                    to="/login">
-                <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
+                <MenuItem onClick={()=> {
+                    handleMenuClose()
+                    props.setLoading()
+                }}>Log In</MenuItem>
             </Link>
             }
             {

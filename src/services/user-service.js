@@ -108,6 +108,23 @@ const deleteUser=(userId)=>
     })
         .then(response=>response.json())
 
+const followUser=(userId,targetId)=>
+    fetch(`${BASEURL}/user/follow/${userId}/${targetId}`,{
+        method: 'POST'
+    }).then(response=>response.json())
+
+
+const unFollowUser=(userId,targetId)=>
+    fetch(`${BASEURL}/user/unfollow/${userId}/${targetId}`,{
+        method: 'POST'
+    }).then(response=>response.json())
+
+
+const findUserDetails=(userId)=>
+    fetch(`${BASEURL}/user/details/${userId}`)
+        .then(response=>response.json())
+
+
 
 const api = {
     findUserById,
@@ -124,7 +141,10 @@ const api = {
     checkEmailService,
     findEventsForUser,
     findAllUsers,
-    deleteUser
+    deleteUser,
+    followUser,
+    unFollowUser,
+    findUserDetails
 };
 
 export default api;

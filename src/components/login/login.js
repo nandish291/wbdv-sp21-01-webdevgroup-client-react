@@ -74,7 +74,7 @@ const LogIn = (props) => {
                             setPasswordError(false)
                             props.invalidUser()
                         }
-                        if(username.length>2 && password.length>5)
+                        if(username.length>0 && password.length>0)
                             props.loginUser({username: username, password: password})
                     }
                     }>

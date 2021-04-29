@@ -6,37 +6,55 @@ import {Link, useParams} from "react-router-dom";
 import userService from "../../services/user-service";
 import {connect} from "react-redux";
 import Event from "./event";
-import {Typography} from "@material-ui/core";
-import {SET_LOADING} from "../../actions/navBar-actions";
+import {Button, Typography} from "@material-ui/core";
 import Spinner from "../utils/spinner";
+import {People} from "@material-ui/icons";
+import userActions from '../../actions/user-actions'
 
 const Profile = (
     {
         user,
-        findUserById,
         updateUser,
         session,
-        loading
+        loading,
+        follow,
+        unFollow,
+        findUserDetails,
+        followers,
+        following
     }
 ) => {
 
     const {uid} = useParams();
-    const [isInfoTab, setIsInfoTab] = useState(true)
-    const [anonymous,setAnonymous]=useState(true)
+    const [isInfoTab, setIsInfoTab] = useState(0)
+    const [anonymous, setAnonymous] = useState(true)
+    const [followingUser,setFollowingUser]= useState(false)
 
     useEffect(() => {
-        if(uid)
-            findUserById(uid)
-        else if(session.userLoggedin) {
-            findUserById(session.user.id)
+        console.log(loading)
+        if (uid)
+            findUserDetails(uid)
+        else if (session.userLoggedin) {
+            findUserDetails(session.user.id)
             setAnonymous(false)
         }
-        if(uid==session.user.id)
-        {
+        if (uid == session.user.id) {
             setAnonymous(false)
         }
 
     }, [session.userLoggedin])
+
+    useEffect(()=>{
+        if(session.userLoggedin && anonymous)
+        {
+            debugger
+            if(followers)
+            {
+                if(followers.find(follower=>follower.id===session.user.id))
+                    setFollowingUser(true)
+            }
+        }
+    },[session.followStatus,session.unfollowStatus])
 
     return (
         <>
@@ -61,6 +79,21 @@ const Profile = (
 
                             <div className="card-body">
                                 <h5 className="card-title text-center">{user.firstName} {user.lastName}</h5>
+                                {
+                                    anonymous && !followingUser &&
+                                    <Button onClick={()=>{
+                                        if(session.userLoggedin)
+                                            follow(session.user.id,user.id)
+                                    }} fullWidth style={{float: 'right'}} color='primary'
+                                            variant='contained'>Follow</Button>}
+                                {
+                                    anonymous && followingUser &&
+                                    <Button onClick={()=>{
+                                        if(session.userLoggedin)
+                                            unFollow(session.user.id,user.id)
+                                    }} fullWidth style={{float: 'right'}}
+                                            variant='contained'>UnFollow</Button>
+                                }
                             </div>
 
                         </div>
@@ -71,13 +104,13 @@ const Profile = (
                                 <div className="card-header">
                                     <ul className="nav nav-tabs card-header-tabs">
                                         <li className="nav-item">
-                                            <Link className={`nav-link ${isInfoTab ? 'active' : ''}`}
+                                            <Link className={`nav-link ${isInfoTab === 0 ? 'active' : ''}`}
                                                   aria-current="true" to="#"
-                                                  onClick={() => setIsInfoTab(true)}>Basic Info</Link>
+                                                  onClick={() => setIsInfoTab(0)}>Basic Info</Link>
                                         </li>
                                         <li className="nav-item">{
-                                            <Link className={`nav-link ${isInfoTab ? '' : 'active'}`} to="#"
-                                                  onClick={() => setIsInfoTab(false)}
+                                            <Link className={`nav-link ${isInfoTab === 1 ? 'active' : ''}`} to="#"
+                                                  onClick={() => setIsInfoTab(1)}
                                             >{
                                                 !anonymous &&
                                                 <Typography>My Events</Typography>}
@@ -87,16 +120,27 @@ const Profile = (
                                                 }
                                             </Link>}
                                         </li>
+                                        <li className="nav-item">{
+                                            <Link className={`nav-link ${isInfoTab === 3 ? 'active' : ''}`} to="#"
+                                                  onClick={() => setIsInfoTab(3)}
+                                            >
+                                                <Typography>People</Typography>
+                                            </Link>}
+                                        </li>
                                     </ul>
                                 </div>
                                 <div className="card-body">
                                     {
-                                        isInfoTab &&
+                                        isInfoTab === 0 &&
                                         <BasicInfo user={user} updateUser={updateUser} anonymous={anonymous}/>
                                     }
                                     {
-                                        !isInfoTab &&
+                                        isInfoTab === 1 &&
                                         <Event user={user}/>
+                                    }
+                                    {
+                                        isInfoTab === 2 &&
+                                        <People user={user}/>
                                     }
                                 </div>
                             </div>
@@ -106,40 +150,25 @@ const Profile = (
 
                 </div>}
             {
-                loading&&
-                    <Spinner/>
+                loading &&
+                <Spinner/>
             }
         </>
     )
 
 }
 
-
-
-
 const stpm = (state) => {
     return {
-        user: state.userReducer.user,
+        user: state.userReducer.userDetails.user,
         session: state.sessionReducer,
-        loading: state.navBarReducer.loading
+        loading: state.navBarReducer.loading,
+        followers: state.userReducer.userDetails.followers,
+        following: state.userReducer.userDetails.following
     }
 }
 const dtpm = (dispatch) => {
     return {
-        findUserById: (uid) =>{
-            userService.findUserById(uid)
-                .then(u => {
-                    console.log(u);
-                    dispatch({
-                        type: "FIND_USER_BY_ID",
-                        user: u
-                    })
-                    dispatch({
-                        type: SET_LOADING,
-                        loading: false
-                    })
-                })
-        },
         updateUser:(user)=>{
             userService.updateUser(user)
                 .then(u=>{
@@ -148,7 +177,10 @@ const dtpm = (dispatch) => {
                         user: u
                     })
                 })
-        }
+        },
+        follow: (userId,targetId)=> userActions.followUser(dispatch,userId,targetId),
+        unFollow: (userId,targetId)=> userActions.unFollowUser(dispatch,userId,targetId),
+        findUserDetails: (userId)=> userActions.findUserDetails(dispatch,userId)
     }
 }
 

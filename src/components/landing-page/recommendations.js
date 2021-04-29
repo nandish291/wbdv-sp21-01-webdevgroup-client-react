@@ -52,7 +52,8 @@ const Recommendations=(props)=>{
     },[props.session.userLoggedin])
 
     useEffect(()=>{
-        userRecommendations()
+        if(props.session.userLoggedin)
+            userRecommendations()
     },[props.recommendedEvents.eventIds])
 
     return(
@@ -62,13 +63,13 @@ const Recommendations=(props)=>{
             <>
                 <div style={{margin: '2em'}}>
                     {
-                        props.recommendedEvents.eventsByPerformer.length > 0 &&
+                        props.session.userLoggedin && props.recommendedEvents.eventsByPerformer.length > 0 &&
                         <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[1]} </Typography>
                     }
                     <div className={classes.root}>
                         <Grid container direction='row' spacing={3}>
                             {
-                                props.recommendedEvents.eventsByPerformer.length > 0 &&
+                                props.session.userLoggedin && props.recommendedEvents.eventsByPerformer.length > 0 &&
                                 props.recommendedEvents.eventsByPerformer.map(eve => {
                                     return (
                                         <Grid key={eve.id} item className={classes.paper}>
@@ -82,13 +83,13 @@ const Recommendations=(props)=>{
                 </div>
                 <div style={{margin: '2em'}}>
                     {
-                        props.recommendedEvents.eventsByEvent.length>0&&
+                        props.session.userLoggedin && props.recommendedEvents.eventsByEvent.length>0 &&
                         <Typography variant='h3'>More events like {props.recommendedEvents.eventIds.eventNames[0]} </Typography>
                     }
                     <div className={classes.root}>
                         <Grid container direction='row' spacing={3} >
                             {
-                                props.recommendedEvents.eventsByEvent.length>0 &&
+                                props.session.userLoggedin && props.recommendedEvents.eventsByEvent.length>0 &&
                                 props.recommendedEvents.eventsByEvent.map(eve=>{
                                     return(
                                         <Grid key={eve.id} item className={classes.paper}>
